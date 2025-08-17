@@ -1,0 +1,9 @@
+[project]
+name = "poe-api-demo"
+version = "0.1.0"
+description = "Demo for using Poe API"
+requires-python = ">=3.8"
+dependencies = [
+    "openai>=1.0.0",
+    "fastapi-poe>=0.0.48",
+]

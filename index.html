@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Model Chat</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #4a90e2 0%, #2c5282 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #4a90e2 0%, #2c5282 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .api-key-display {
+            background: #f0f0f0;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #666;
+            word-break: break-all;
+            display: inline-block;
+        }
+
+        .models-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 20px;
+            padding: 20px 0;
+        }
+
+        .model-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-height: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .model-header {
+            font-weight: 600;
+            color: #333;
+            padding: 8px 12px;
+            background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .model-status {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        .model-status.loading {
+            background: #fff3cd;
+            color: #856404;
+            animation: pulse 1.5s infinite;
+        }
+
+        .model-status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .model-status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .model-response {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #333;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .model-response.loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+        }
+
+        .chat-history {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .chat-history:empty {
+            display: none;
+        }
+
+        .message {
+            padding: 10px 14px;
+            border-radius: 8px;
+            margin: 0;
+        }
+
+        .message.user {
+            background: linear-gradient(135deg, #4a90e2 0%, #2c5282 100%);
+            color: white;
+            align-self: flex-end;
+            max-width: 80%;
+        }
+
+        .message.system {
+            background: #f0f0f0;
+            color: #666;
+            font-style: italic;
+            align-self: flex-start;
+            max-width: 80%;
+            font-size: 13px;
+        }
+
+        .input-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-form {
+            display: flex;
+            gap: 12px;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+
+        .message-input:focus {
+            outline: none;
+            border-color: #4a90e2;
+        }
+
+        .send-button {
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #4a90e2 0%, #2c5282 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
+        }
+
+        .send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .no-api-key {
+            background: white;
+            border-radius: 12px;
+            padding: 60px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .no-api-key h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 32px;
+        }
+
+        .no-api-key p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 24px;
+            font-size: 16px;
+        }
+
+        .no-api-key code {
+            background: #f0f0f0;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            display: inline-block;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+
+        .no-api-key a {
+            color: #4a90e2;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .no-api-key a:hover {
+            text-decoration: underline;
+        }
+
+        .loading-dots {
+            display: inline-block;
+        }
+
+        .loading-dots span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #999;
+            margin: 0 2px;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .loading-dots span:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .loading-dots span:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes bounce {
+            0%, 80%, 100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .error-text {
+            color: #c00;
+        }
+
+        .response-time {
+            font-size: 11px;
+            color: #999;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <div id="mainContent">
+            <!-- Content will be inserted here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // Get API key from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // Auto-redirect if no parameters at all
+        if (!window.location.search) {
+            window.location.href = window.location.pathname + '?api_key=';
+        }
+        
+        const apiKey = urlParams.get('apiKey') || urlParams.get('api_key');
+        const baseUrl = 'https://api.poe.com/v1';
+        
+        // Models will be dynamically loaded or configured via URL
+        let models = [];
+
+        let messages = [];
+
+        function initializeApp() {
+            const mainContent = document.getElementById('mainContent');
+
+            if (!apiKey) {
+                mainContent.innerHTML = `
+                    <div class="no-api-key">
+                        <h2>🔑 API Key Required</h2>
+                        <p>To use this multi-model chat interface, provide your Poe API key in the URL.</p>
+                        <code>http://localhost:64088/index.html?api_key=YOUR_API_KEY</code>
+                        <p>Get your API key from <a href="https://poe.com/api_key" target="_blank">poe.com/api_key</a></p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Get models from URL parameter or use defaults
+            const modelsParam = urlParams.get('models');
+            if (modelsParam) {
+                models = modelsParam.split(',').map(m => m.trim());
+            } else {
+                // Default models if none specified
+                models = [
+                    'Claude-3.5-Sonnet',
+                    'Claude-Opus-4.1',
+                    'GPT-4o',
+                    'GPT-4o-Mini',
+                    'Mistral-Large-2',
+                    'Command-R-Plus'
+                ];
+            }
+            
+            if (models.length === 0) {
+                mainContent.innerHTML = `
+                    <div class="no-api-key">
+                        <h2>⚠️ No Models Specified</h2>
+                        <p>Please specify which models to query in the URL.</p>
+                        <code>${window.location.origin}${window.location.pathname}?api_key=${apiKey}&models=MODEL1,MODEL2</code>
+                    </div>
+                `;
+                return;
+            }
+
+            mainContent.innerHTML = `
+                <div class="input-container">
+                    <form id="chatForm" class="input-form">
+                        <input type="text" id="messageInput" class="message-input" placeholder="Ask a question to all models..." autofocus>
+                        <button type="submit" id="sendButton" class="send-button">Ask All Models</button>
+                    </form>
+                    <div class="chat-history" id="chatHistory" style="margin-top: 20px;">
+                    </div>
+                </div>
+                
+                <div class="models-grid" id="modelsGrid">
+                    ${models.map(model => `
+                        <div class="model-card">
+                            <div class="model-header">
+                                <span>${model}</span>
+                                <span class="model-status" id="status-${model.replace(/\./g, '-')}">Ready</span>
+                            </div>
+                            <div class="model-response" id="response-${model.replace(/\./g, '-')}">
+                                Waiting for your question...
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            // Set up event listener
+            document.getElementById('chatForm').addEventListener('submit', handleSubmit);
+        }
+
+        async function handleSubmit(e) {
+            e.preventDefault();
+            
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            const sendButton = document.getElementById('sendButton');
+            const chatHistory = document.getElementById('chatHistory');
+            
+            // Add user message to history
+            const userMessageDiv = document.createElement('div');
+            userMessageDiv.className = 'message user';
+            userMessageDiv.textContent = message;
+            chatHistory.appendChild(userMessageDiv);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+            
+            // Add to messages array
+            messages.push({ role: 'user', content: message });
+            
+            // Clear input but keep button enabled
+            input.value = '';
+            input.focus();
+            
+            // Reset all model cards
+            models.forEach(model => {
+                const modelId = model.replace(/\./g, '-');
+                const statusEl = document.getElementById(`status-${modelId}`);
+                const responseEl = document.getElementById(`response-${modelId}`);
+                
+                statusEl.className = 'model-status loading';
+                statusEl.textContent = 'Loading...';
+                responseEl.className = 'model-response loading';
+                responseEl.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+            });
+            
+            // Create a unique ID for this request
+            const requestId = Date.now() + Math.random();
+            
+            // Add placeholder for system message
+            const systemPlaceholder = document.createElement('div');
+            systemPlaceholder.className = 'message system';
+            systemPlaceholder.textContent = 'Sending request to models...';
+            systemPlaceholder.dataset.requestId = requestId;
+            chatHistory.appendChild(systemPlaceholder);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+            
+            // Query all models in parallel (don't await)
+            const modelPromises = models.map(model => queryModel(model, messages));
+            
+            // Track responses
+            let successCount = 0;
+            let errorCount = 0;
+            const totalModels = models.length;
+            
+            // Handle completion asynchronously
+            Promise.allSettled(modelPromises).then((results) => {
+                results.forEach(result => {
+                    if (result.status === 'fulfilled' && result.value === true) {
+                        successCount++;
+                    } else {
+                        errorCount++;
+                    }
+                });
+                
+                // Find and update the placeholder for this specific request
+                const placeholder = chatHistory.querySelector(`[data-request-id="${requestId}"]`);
+                if (placeholder) {
+                    if (successCount === totalModels) {
+                        placeholder.textContent = 'Responses received from all models';
+                    } else if (successCount > 0) {
+                        placeholder.textContent = `Responses received from ${successCount} of ${totalModels} models`;
+                    } else {
+                        placeholder.textContent = 'Failed to receive responses from models';
+                    }
+                }
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+            });
+        }
+
+        async function queryModel(model, messages) {
+            const modelId = model.replace(/\./g, '-');
+            const statusEl = document.getElementById(`status-${modelId}`);
+            const responseEl = document.getElementById(`response-${modelId}`);
+            const startTime = Date.now();
+            
+            try {
+                const response = await fetch(`${baseUrl}/chat/completions`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: model,
+                        messages: messages,
+                        stream: false
+                    })
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.text();
+                    throw new Error(`HTTP ${response.status}: ${errorData}`);
+                }
+                
+                const data = await response.json();
+                const responseTime = ((Date.now() - startTime) / 1000).toFixed(1);
+                const content = data.choices[0].message.content;
+                
+                statusEl.className = 'model-status success';
+                statusEl.textContent = `✓ ${responseTime}s`;
+                responseEl.className = 'model-response';
+                responseEl.textContent = content;
+                
+                return true;
+                
+            } catch (error) {
+                statusEl.className = 'model-status error';
+                statusEl.textContent = 'Error';
+                responseEl.className = 'model-response';
+                responseEl.innerHTML = `<span class="error-text">Error: ${error.message}</span>`;
+                
+                return false;
+            }
+        }
+
+        // Initialize the app when the page loads
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    </script>
+</body>
+</html>

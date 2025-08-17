@@ -11,3 +11,9 @@ Formatting
 - Check: uv run --frozen ruff check *.py
 - Fix: uv run --frozen ruff check *.py --fix
 - Sort imports: uv run --frozen ruff check --select I *.py --fix
+
+Serving
+- `nohup python3 -m http.server 64088 > server.log 2>&1 &`
+
+Warnings
+- Put any API keys in code
