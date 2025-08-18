@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Multi-Model Chat</title>
+    <!-- Markdown and LaTeX rendering libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -120,8 +125,55 @@
             font-size: 14px;
             line-height: 1.6;
             color: #333;
-            white-space: pre-wrap;
             word-wrap: break-word;
+        }
+        
+        .model-response h1, .model-response h2, .model-response h3 {
+            margin-top: 16px;
+            margin-bottom: 8px;
+        }
+        
+        .model-response h1:first-child, .model-response h2:first-child, .model-response h3:first-child {
+            margin-top: 0;
+        }
+        
+        .model-response p {
+            margin: 8px 0;
+        }
+        
+        .model-response ul, .model-response ol {
+            margin: 8px 0;
+            padding-left: 24px;
+        }
+        
+        .model-response li {
+            margin: 4px 0;
+        }
+        
+        .model-response code {
+            background: #f0f0f0;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .model-response pre {
+            background: #f0f0f0;
+            padding: 12px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        
+        .model-response pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        .model-response blockquote {
+            border-left: 4px solid #ddd;
+            margin: 8px 0;
+            padding-left: 16px;
+            color: #666;
         }
 
         .model-response.loading {
@@ -630,7 +682,7 @@
                     statusEl.className = 'model-status success';
                     statusEl.textContent = `✓ ${responseTime}s`;
                     responseEl.className = 'model-response';
-                    responseEl.textContent = content;
+                    renderContent(responseEl, content);
                 }
                 
                 // Remove from loading set
@@ -815,7 +867,7 @@
                         statusEl.className = 'model-status success';
                         statusEl.textContent = `✓ ${response.responseTime}s`;
                         responseEl.className = 'model-response';
-                        responseEl.textContent = response.content;
+                        renderContent(responseEl, response.content);
                     } else {
                         statusEl.className = 'model-status error';
                         statusEl.textContent = 'Error';
@@ -826,6 +878,28 @@
             }
         }
 
+        // Function to render markdown and LaTeX content
+        function renderContent(element, content) {
+            // First, parse markdown to HTML
+            const htmlContent = marked.parse(content);
+            
+            // Set the HTML content
+            element.innerHTML = htmlContent;
+            
+            // Then render LaTeX math
+            if (window.renderMathInElement) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false},
+                        {left: '\\[', right: '\\]', display: true},
+                        {left: '\\(', right: '\\)', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+        
         // Initialize the app when the page loads
         document.addEventListener('DOMContentLoaded', initializeApp);
     </script>

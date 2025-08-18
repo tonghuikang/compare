@@ -27,7 +27,7 @@ function testRapidMessages() {
     
     // Send 3 "hi" messages with no delay between them
     for (let i = 0; i < 3; i++) {
-        input.value = 'What is ' + i + ' to the power of ' + i;
+        input.value = 'What is ' + i + ' to the power of ' + i + '? Use LaTeX and markdown.';
         button.click();
         console.log(`Sent message ${i + 1}`);
     }
