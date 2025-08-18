@@ -11,11 +11,14 @@ Testing
 - What to check
     - There should not be repeated user messages
     - The user message and the status messages should interleave correctly
+        - There should be one and only one status message for one user message
     - No user messages are dropped
     - All status messages should to navigate individual response groups
     - Do not display success status messages when it hasn't succeeded
     - Check the individual response groups
         - The responses should be different (since the questions are different) - especially for slow models
+    - Completions from the model should have the full context of the conversation
+    - Slow responses should not block successive user messages from being processed
 
 ```js
 // Test script for rapid succession messages
@@ -26,20 +29,23 @@ function testRapidMessages() {
     const button = document.getElementById('sendButton');
     
     // Send 3 "hi" messages with no delay between them
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 2; i++) {
         input.value = 'What is ' + i + ' to the power of ' + i + '? Use LaTeX and markdown.';
         button.click();
         console.log(`Sent message ${i + 1}`);
     }
+    input.value = 'What is the sum from the last two answers?';
+    button.click();
+    console.log(`Sent final message`);
     
     console.log('Finished sending 3 messages rapidly');
 }
 
 // Run the test
 testRapidMessages();
-``
+```
 
 
 
 Warnings
-- Put any API keys in code
+- Do not put any API keys in code
