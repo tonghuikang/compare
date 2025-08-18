@@ -291,6 +291,34 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         
+        .save-comparison-button {
+            width: 100%;
+            max-width: 1400px;
+            margin: 20px auto 0;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: block;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .save-comparison-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+        
+        .save-comparison-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
         @media (max-width: 768px) {
             .input-container {
                 padding: 15px;
@@ -600,6 +628,11 @@
                 }
             }
 
+            // Add save comparison button only on localhost
+            const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            const saveButtonHtml = isLocalhost ? 
+                '<button id="saveComparisonButton" class="save-comparison-button">Save Comparison</button>' : '';
+            
             mainContent.innerHTML = `
                 <div class="input-container">
                     <form id="chatForm" class="input-form">
@@ -622,10 +655,20 @@
                         </div>
                     `).join('')}
                 </div>
+                
+                ${saveButtonHtml}
             `;
 
-            // Set up event listener
+            // Set up event listeners
             document.getElementById('chatForm').addEventListener('submit', handleSubmit);
+            
+            // Set up save comparison button if it exists
+            if (isLocalhost) {
+                const saveButton = document.getElementById('saveComparisonButton');
+                if (saveButton) {
+                    saveButton.addEventListener('click', saveComparison);
+                }
+            }
         }
 
         async function handleSubmit(e) {
@@ -1056,6 +1099,66 @@
                     ],
                     throwOnError: false
                 });
+            }
+        }
+        
+        // Function to save comparison
+        async function saveComparison() {
+            const saveButton = document.getElementById('saveComparisonButton');
+            if (!saveButton) return;
+            
+            // Disable button while saving
+            saveButton.disabled = true;
+            saveButton.textContent = 'Saving...';
+            
+            try {
+                // Get the first user message to use for title
+                const firstUserMessage = messages.find(m => m.role === 'user');
+                const title = firstUserMessage ? 
+                    firstUserMessage.content.split(' ').slice(0, 10).join(' ') : 
+                    'Untitled Comparison';
+                
+                // Create timestamp for ID
+                const now = new Date();
+                const id = now.toISOString().replace(/T/, '-').replace(/:/g, '-').replace(/\..+/, '').toLowerCase();
+                
+                // Prepare comparison data
+                const comparisonData = {
+                    id: id,
+                    title: title,
+                    datetime: now.toISOString().replace(/T/, ' ').replace(/\..+/, ''),
+                    messages: messages,
+                    requestResponses: requestResponses,
+                    models: models,
+                    savedAt: now.toISOString()
+                };
+                
+                // Save to server (only works on localhost)
+                const response = await fetch('/save-comparison', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(comparisonData)
+                });
+                
+                if (response.ok) {
+                    saveButton.textContent = 'Saved!';
+                    setTimeout(() => {
+                        saveButton.textContent = 'Save Comparison';
+                        saveButton.disabled = false;
+                    }, 2000);
+                } else {
+                    throw new Error('Failed to save comparison');
+                }
+                
+            } catch (error) {
+                console.error('Error saving comparison:', error);
+                saveButton.textContent = 'Save Failed';
+                setTimeout(() => {
+                    saveButton.textContent = 'Save Comparison';
+                    saveButton.disabled = false;
+                }, 2000);
             }
         }
         
