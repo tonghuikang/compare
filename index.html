@@ -22,6 +22,13 @@
             min-height: 100vh;
             padding: 20px;
         }
+        
+        /* Mobile adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+        }
 
         .container {
             max-width: 1400px;
@@ -35,6 +42,13 @@
             margin-bottom: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
+        
+        @media (max-width: 768px) {
+            .header {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+        }
 
         .header h1 {
             font-size: 28px;
@@ -45,6 +59,12 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 22px;
+            }
+        }
 
         .api-key-display {
             background: #f0f0f0;
@@ -54,6 +74,14 @@
             color: #666;
             word-break: break-all;
             display: inline-block;
+            max-width: 100%;
+        }
+        
+        @media (max-width: 768px) {
+            .api-key-display {
+                padding: 6px 10px;
+                font-size: 10px;
+            }
         }
 
         .models-grid {
@@ -62,6 +90,14 @@
             gap: 30px;
             margin-bottom: 20px;
             padding: 20px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .models-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                padding: 10px 0;
+            }
         }
 
         .model-card {
@@ -72,6 +108,13 @@
             max-height: 400px;
             display: flex;
             flex-direction: column;
+        }
+        
+        @media (max-width: 768px) {
+            .model-card {
+                padding: 12px;
+                max-height: 300px;
+            }
         }
 
         .model-header {
@@ -193,10 +236,21 @@
             flex-direction: column;
             gap: 8px;
             border: 1px solid #e0e0e0;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .chat-history {
+                max-height: 250px;
+                padding: 10px;
+            }
         }
         
         .chat-history:empty {
             display: none;
+            margin: 0;
+            padding: 0;
+            border: none;
         }
 
         .message {
@@ -236,10 +290,23 @@
             padding: 20px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
+        
+        @media (max-width: 768px) {
+            .input-container {
+                padding: 15px;
+            }
+        }
 
         .input-form {
             display: flex;
             gap: 12px;
+        }
+        
+        @media (max-width: 768px) {
+            .input-form {
+                flex-direction: column;
+                gap: 10px;
+            }
         }
 
         .message-input {
@@ -249,6 +316,13 @@
             border-radius: 8px;
             font-size: 15px;
             transition: border-color 0.3s;
+        }
+        
+        @media (max-width: 768px) {
+            .message-input {
+                padding: 12px;
+                font-size: 16px; /* Prevent zoom on iOS */
+            }
         }
 
         .message-input:focus {
@@ -266,6 +340,13 @@
             font-weight: 600;
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        @media (max-width: 768px) {
+            .send-button {
+                padding: 14px 20px;
+                font-size: 16px;
+            }
         }
 
         .send-button:hover {
@@ -286,11 +367,23 @@
             text-align: center;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
+        
+        @media (max-width: 768px) {
+            .no-api-key {
+                padding: 30px 20px;
+            }
+        }
 
         .no-api-key h2 {
             color: #333;
             margin-bottom: 20px;
             font-size: 32px;
+        }
+        
+        @media (max-width: 768px) {
+            .no-api-key h2 {
+                font-size: 24px;
+            }
         }
 
         .no-api-key p {
@@ -308,6 +401,15 @@
             display: inline-block;
             margin: 20px 0;
             font-size: 14px;
+            word-break: break-all;
+            max-width: 100%;
+        }
+        
+        @media (max-width: 768px) {
+            .no-api-key code {
+                padding: 10px;
+                font-size: 12px;
+            }
         }
 
         .no-api-key a {
@@ -501,11 +603,10 @@
             mainContent.innerHTML = `
                 <div class="input-container">
                     <form id="chatForm" class="input-form">
-                        <input type="text" id="messageInput" class="message-input" placeholder="Ask a question to all models..." autofocus>
-                        <button type="submit" id="sendButton" class="send-button">Ask All Models</button>
+                        <input type="text" id="messageInput" class="message-input" placeholder="Ask anything..." autofocus>
+                        <button type="submit" id="sendButton" class="send-button">Send</button>
                     </form>
-                    <div class="chat-history" id="chatHistory" style="margin-top: 20px;">
-                    </div>
+                    <div class="chat-history" id="chatHistory"></div>
                 </div>
                 
                 <div class="models-grid" id="modelsGrid">
@@ -516,7 +617,7 @@
                                 <span class="model-status" id="status-${model.replace(/\./g, '-')}">Ready</span>
                             </div>
                             <div class="model-response" id="response-${model.replace(/\./g, '-')}">
-                                Waiting for your question...
+                                Ready
                             </div>
                         </div>
                     `).join('')}
@@ -571,8 +672,8 @@
                 } else {
                     // Model is still loading from previous request, show status
                     console.log(`${model} is still loading from previous request`);
-                    if (!statusEl.textContent.includes('Still processing')) {
-                        statusEl.textContent = 'Still processing previous request...';
+                    if (!statusEl.textContent.includes('Busy')) {
+                        statusEl.textContent = 'Busy...';
                     }
                 }
             });
@@ -594,7 +695,7 @@
                 // Add a system message placeholder that will be updated when processed
                 const queuedMessage = document.createElement('div');
                 queuedMessage.className = 'message system';
-                queuedMessage.textContent = 'Message queued - waiting for models...';
+                queuedMessage.textContent = 'Queued';
                 queuedMessage.id = placeholderId;
                 chatHistory.appendChild(queuedMessage);
                 chatHistory.scrollTop = chatHistory.scrollHeight;
@@ -615,9 +716,9 @@
             const systemPlaceholder = document.createElement('div');
             systemPlaceholder.className = 'message system clickable';
             if (modelsToQuery.length < models.length) {
-                systemPlaceholder.textContent = `Sending request to ${modelsToQuery.length} available models (${models.length - modelsToQuery.length} still processing)...`;
+                systemPlaceholder.textContent = `Sending to ${modelsToQuery.length} models (${models.length - modelsToQuery.length} busy)`;
             } else {
-                systemPlaceholder.textContent = 'Sending request to all models...';
+                systemPlaceholder.textContent = 'Sending to all models...';
             }
             systemPlaceholder.dataset.requestId = requestId;
             systemPlaceholder.onclick = () => restoreResponses(requestId);
@@ -649,10 +750,10 @@
                     if (placeholder) {
                         if (completedCount === totalModels) {
                             placeholder.textContent = successCount === totalModels ? 
-                                'Responses received from all models' : 
-                                `Responses received from ${successCount} of ${totalModels} models`;
+                                'All models responded' : 
+                                `${successCount}/${totalModels} responded`;
                         } else {
-                            placeholder.textContent = `Loading... (${completedCount}/${totalModels} completed)`;
+                            placeholder.textContent = `Loading... (${completedCount}/${totalModels})`;
                         }
                     }
                 }).catch(() => {
@@ -674,11 +775,11 @@
                 const placeholder = chatHistory.querySelector(`[data-request-id="${requestId}"]`);
                 if (placeholder) {
                     if (successCount === totalModels) {
-                        placeholder.textContent = 'Responses received from all models';
+                        placeholder.textContent = 'All models responded';
                     } else if (successCount > 0) {
-                        placeholder.textContent = `Responses received from ${successCount} of ${totalModels} models`;
+                        placeholder.textContent = `${successCount}/${totalModels} responded`;
                     } else {
-                        placeholder.textContent = 'Failed to receive responses from models';
+                        placeholder.textContent = 'All failed';
                     }
                     
                     // Keep it clickable (it's already set up)
@@ -828,7 +929,7 @@
             if (placeholder) {
                 // Update the existing placeholder
                 placeholder.className = 'message system clickable';
-                placeholder.textContent = `Processing queued message (${queued.pendingModels.length} models)...`;
+                placeholder.textContent = `Processing (${queued.pendingModels.length} models)...`;
                 placeholder.dataset.requestId = requestId;
                 placeholder.onclick = () => restoreResponses(requestId);
                 placeholder.title = 'Click to view current responses';
@@ -837,7 +938,7 @@
                 // Fallback: create a new one if placeholder not found
                 const systemPlaceholder = document.createElement('div');
                 systemPlaceholder.className = 'message system clickable';
-                systemPlaceholder.textContent = `Processing queued message (${queued.pendingModels.length} models)...`;
+                systemPlaceholder.textContent = `Processing (${queued.pendingModels.length} models)...`;
                 systemPlaceholder.dataset.requestId = requestId;
                 systemPlaceholder.onclick = () => restoreResponses(requestId);
                 systemPlaceholder.title = 'Click to view current responses';
@@ -886,10 +987,10 @@
                     if (placeholder) {
                         if (completedCount === totalModels) {
                             placeholder.textContent = successCount === totalModels ? 
-                                'Responses received from all models' : 
-                                `Responses received from ${successCount} of ${totalModels} models`;
+                                'All models responded' : 
+                                `${successCount}/${totalModels} responded`;
                         } else {
-                            placeholder.textContent = `Loading... (${completedCount}/${totalModels} completed)`;
+                            placeholder.textContent = `Loading... (${completedCount}/${totalModels})`;
                         }
                     }
                 }).catch(() => {
