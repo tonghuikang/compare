@@ -12,6 +12,8 @@
         "WebFetch(domain:docs.anthropic.com)",
         "WebFetch(domain:docs.pytorch.org)",
         "WebFetch(domain:docs.vllm.ai)",
+        "Bash(echo $POE_API_KEY)",
+        "Bash(./start_server.sh)",
         "mcp__puppeteer__puppeteer_navigate",
         "mcp__puppeteer__puppeteer_screenshot",
         "mcp__puppeteer__puppeteer_click",

@@ -135,7 +135,7 @@
             background: #f9f9f9;
             border-radius: 8px;
             padding: 12px;
-            max-height: 200px;
+            max-height: 400px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
@@ -167,6 +167,15 @@
             align-self: flex-start;
             max-width: 80%;
             font-size: 13px;
+        }
+
+        .message.system.clickable {
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .message.system.clickable:hover {
+            background: #e0e0e0;
         }
 
         .input-container {
@@ -327,6 +336,15 @@
         let models = [];
 
         let messages = [];
+        
+        // Store responses for each request
+        let requestResponses = {};
+        
+        // Track which models are currently loading
+        let modelsLoading = new Set();
+        
+        // Queue for messages waiting to be processed
+        let messageQueue = [];
 
         function initializeApp() {
             const mainContent = document.getElementById('mainContent');
@@ -410,7 +428,7 @@
             const sendButton = document.getElementById('sendButton');
             const chatHistory = document.getElementById('chatHistory');
             
-            // Add user message to history
+            // Add user message to history (ALWAYS show what user typed)
             const userMessageDiv = document.createElement('div');
             userMessageDiv.className = 'message user';
             userMessageDiv.textContent = message;
@@ -424,48 +442,125 @@
             input.value = '';
             input.focus();
             
-            // Reset all model cards
+            // Check which models are available
+            const modelsToQuery = [];
             models.forEach(model => {
                 const modelId = model.replace(/\./g, '-');
                 const statusEl = document.getElementById(`status-${modelId}`);
                 const responseEl = document.getElementById(`response-${modelId}`);
                 
-                statusEl.className = 'model-status loading';
-                statusEl.textContent = 'Loading...';
-                responseEl.className = 'model-response loading';
-                responseEl.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+                if (!modelsLoading.has(model)) {
+                    // Model is available, reset it and add to query list
+                    statusEl.className = 'model-status loading';
+                    statusEl.textContent = 'Loading...';
+                    responseEl.className = 'model-response loading';
+                    responseEl.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+                    modelsToQuery.push(model);
+                    modelsLoading.add(model);
+                    console.log(`Adding ${model} to loading set`);
+                } else {
+                    // Model is still loading from previous request, show status
+                    console.log(`${model} is still loading from previous request`);
+                    if (!statusEl.textContent.includes('Still processing')) {
+                        statusEl.textContent = 'Still processing previous request...';
+                    }
+                }
             });
+            
+            // If no models to query, add to queue for later processing
+            if (modelsToQuery.length === 0) {
+                console.log('All models busy - adding message to queue');
+                
+                // Create a placeholder with a unique ID that will be updated later
+                const placeholderId = 'queued-' + Date.now() + Math.random();
+                
+                messageQueue.push({
+                    message: message,
+                    timestamp: new Date(),
+                    placeholderId: placeholderId,
+                    pendingModels: [...models] // Track which models should handle this message
+                });
+                
+                // Add a system message placeholder that will be updated when processed
+                const queuedMessage = document.createElement('div');
+                queuedMessage.className = 'message system';
+                queuedMessage.textContent = 'Message queued - waiting for models...';
+                queuedMessage.id = placeholderId;
+                chatHistory.appendChild(queuedMessage);
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+                return;
+            }
             
             // Create a unique ID for this request
             const requestId = Date.now() + Math.random();
             
-            // Add placeholder for system message
+            // Initialize response storage for this request
+            requestResponses[requestId] = {
+                question: message,
+                responses: {},
+                timestamp: new Date()
+            };
+            
+            // Add placeholder for system message - make it clickable immediately
             const systemPlaceholder = document.createElement('div');
-            systemPlaceholder.className = 'message system';
-            systemPlaceholder.textContent = 'Sending request to models...';
+            systemPlaceholder.className = 'message system clickable';
+            if (modelsToQuery.length < models.length) {
+                systemPlaceholder.textContent = `Sending request to ${modelsToQuery.length} available models (${models.length - modelsToQuery.length} still processing)...`;
+            } else {
+                systemPlaceholder.textContent = 'Sending request to all models...';
+            }
             systemPlaceholder.dataset.requestId = requestId;
+            systemPlaceholder.onclick = () => restoreResponses(requestId);
+            systemPlaceholder.title = 'Click to view current responses';
             chatHistory.appendChild(systemPlaceholder);
             chatHistory.scrollTop = chatHistory.scrollHeight;
             
-            // Query all models in parallel (don't await)
-            const modelPromises = models.map(model => queryModel(model, messages));
+            // Query only available models in parallel (don't await)
+            // Only send the current message, not the entire history
+            const currentMessage = [{ role: 'user', content: message }];
+            const modelPromises = modelsToQuery.map(model => queryModel(model, currentMessage, requestId));
             
             // Track responses
             let successCount = 0;
             let errorCount = 0;
-            const totalModels = models.length;
+            const totalModels = modelsToQuery.length; // Only count models we're actually querying
+            let completedCount = 0;
             
-            // Handle completion asynchronously
-            Promise.allSettled(modelPromises).then((results) => {
-                results.forEach(result => {
-                    if (result.status === 'fulfilled' && result.value === true) {
-                        successCount++;
-                    } else {
-                        errorCount++;
+            // Update status as each model completes
+            modelPromises.forEach((promise, index) => {
+                const model = modelsToQuery[index]; // Get the model name for this promise
+                promise.then(success => {
+                    completedCount++;
+                    if (success) successCount++;
+                    else errorCount++;
+                    
+                    // Update the placeholder text as responses come in
+                    const placeholder = chatHistory.querySelector(`[data-request-id="${requestId}"]`);
+                    if (placeholder) {
+                        if (completedCount === totalModels) {
+                            placeholder.textContent = successCount === totalModels ? 
+                                'Responses received from all models' : 
+                                `Responses received from ${successCount} of ${totalModels} models`;
+                        } else {
+                            placeholder.textContent = `Loading... (${completedCount}/${totalModels} completed)`;
+                        }
+                    }
+                }).catch(() => {
+                    completedCount++;
+                    errorCount++;
+                    // Make sure to remove from loading set on error in promise chain
+                    modelsLoading.delete(model);
+                    const placeholder = chatHistory.querySelector(`[data-request-id="${requestId}"]`);
+                    if (placeholder) {
+                        placeholder.textContent = `Loading... (${completedCount}/${totalModels} completed)`;
                     }
                 });
-                
-                // Find and update the placeholder for this specific request
+            });
+            
+            // Handle final completion
+            Promise.allSettled(modelPromises).then((results) => {
+                // Final counts are already tracked in the individual promises
+                // Just ensure final UI state
                 const placeholder = chatHistory.querySelector(`[data-request-id="${requestId}"]`);
                 if (placeholder) {
                     if (successCount === totalModels) {
@@ -475,12 +570,20 @@
                     } else {
                         placeholder.textContent = 'Failed to receive responses from models';
                     }
+                    
+                    // Keep it clickable (it's already set up)
+                    if (successCount === 0) {
+                        // Only remove clickable if completely failed
+                        placeholder.className = 'message system';
+                        placeholder.onclick = null;
+                        placeholder.title = '';
+                    }
                 }
                 chatHistory.scrollTop = chatHistory.scrollHeight;
             });
         }
 
-        async function queryModel(model, messages) {
+        async function queryModel(model, messages, requestId) {
             const modelId = model.replace(/\./g, '-');
             const statusEl = document.getElementById(`status-${modelId}`);
             const responseEl = document.getElementById(`response-${modelId}`);
@@ -509,20 +612,217 @@
                 const responseTime = ((Date.now() - startTime) / 1000).toFixed(1);
                 const content = data.choices[0].message.content;
                 
-                statusEl.className = 'model-status success';
-                statusEl.textContent = `✓ ${responseTime}s`;
-                responseEl.className = 'model-response';
-                responseEl.textContent = content;
+                // Store the response first
+                if (requestId && requestResponses[requestId]) {
+                    requestResponses[requestId].responses[model] = {
+                        content: content,
+                        responseTime: responseTime,
+                        status: 'success'
+                    };
+                }
+                
+                // Only update display if this is the most recent request
+                // (check if there's a newer request in the responses)
+                const allRequestIds = Object.keys(requestResponses).map(id => parseFloat(id)).sort((a, b) => b - a);
+                const isLatestRequest = allRequestIds[0] === parseFloat(requestId);
+                
+                if (isLatestRequest) {
+                    statusEl.className = 'model-status success';
+                    statusEl.textContent = `✓ ${responseTime}s`;
+                    responseEl.className = 'model-response';
+                    responseEl.textContent = content;
+                }
+                
+                // Remove from loading set
+                modelsLoading.delete(model);
+                console.log(`Removed ${model} from loading set (success)`);
+                
+                // Check if we should process queued messages
+                processQueuedMessages();
                 
                 return true;
                 
             } catch (error) {
-                statusEl.className = 'model-status error';
-                statusEl.textContent = 'Error';
-                responseEl.className = 'model-response';
-                responseEl.innerHTML = `<span class="error-text">Error: ${error.message}</span>`;
+                // Store the error first
+                if (requestId && requestResponses[requestId]) {
+                    requestResponses[requestId].responses[model] = {
+                        content: error.message,
+                        responseTime: ((Date.now() - startTime) / 1000).toFixed(1),
+                        status: 'error'
+                    };
+                }
+                
+                // Only update display if this is the most recent request
+                const allRequestIds = Object.keys(requestResponses).map(id => parseFloat(id)).sort((a, b) => b - a);
+                const isLatestRequest = allRequestIds[0] === parseFloat(requestId);
+                
+                if (isLatestRequest) {
+                    statusEl.className = 'model-status error';
+                    statusEl.textContent = 'Error';
+                    responseEl.className = 'model-response';
+                    responseEl.innerHTML = `<span class="error-text">Error: ${error.message}</span>`;
+                }
+                
+                // Remove from loading set even on error
+                modelsLoading.delete(model);
+                console.log(`Removed ${model} from loading set (error)`);
+                
+                // Check if we should process queued messages
+                processQueuedMessages();
                 
                 return false;
+            }
+        }
+
+        // Process queued messages when models become available
+        function processQueuedMessages() {
+            // Check if we have queued messages
+            if (messageQueue.length === 0) return;
+            
+            // Find the first queued message where ALL its required models are available
+            let queuedIndex = -1;
+            let queued = null;
+            
+            for (let i = 0; i < messageQueue.length; i++) {
+                const msg = messageQueue[i];
+                // Check if all models this message needs are available
+                const availableForMessage = msg.pendingModels.filter(model => !modelsLoading.has(model));
+                if (availableForMessage.length === msg.pendingModels.length) {
+                    // All models for this message are available
+                    queuedIndex = i;
+                    queued = msg;
+                    break;
+                }
+            }
+            
+            // If no message has all its models available, return
+            if (!queued) return;
+            
+            // Remove this message from the queue
+            messageQueue.splice(queuedIndex, 1);
+            console.log(`Processing queued message: ${queued.message}`);
+            
+            // Create a unique ID for this request
+            const requestId = Date.now() + Math.random();
+            
+            // Initialize response storage for this request
+            requestResponses[requestId] = {
+                question: queued.message,
+                responses: {},
+                timestamp: queued.timestamp
+            };
+            
+            // Find and update the existing placeholder (don't create a new one)
+            const chatHistory = document.getElementById('chatHistory');
+            const placeholder = document.getElementById(queued.placeholderId);
+            if (placeholder) {
+                // Update the existing placeholder
+                placeholder.className = 'message system clickable';
+                placeholder.textContent = `Processing queued message (${queued.pendingModels.length} models)...`;
+                placeholder.dataset.requestId = requestId;
+                placeholder.onclick = () => restoreResponses(requestId);
+                placeholder.title = 'Click to view current responses';
+                placeholder.removeAttribute('id'); // Remove the temporary ID
+            } else {
+                // Fallback: create a new one if placeholder not found
+                const systemPlaceholder = document.createElement('div');
+                systemPlaceholder.className = 'message system clickable';
+                systemPlaceholder.textContent = `Processing queued message (${queued.pendingModels.length} models)...`;
+                systemPlaceholder.dataset.requestId = requestId;
+                systemPlaceholder.onclick = () => restoreResponses(requestId);
+                systemPlaceholder.title = 'Click to view current responses';
+                chatHistory.appendChild(systemPlaceholder);
+            }
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+            
+            // Query all the models that were originally intended for this message
+            const modelPromises = [];
+            queued.pendingModels.forEach(model => {
+                const modelId = model.replace(/\./g, '-');
+                const statusEl = document.getElementById(`status-${modelId}`);
+                const responseEl = document.getElementById(`response-${modelId}`);
+                
+                // Reset UI
+                statusEl.className = 'model-status loading';
+                statusEl.textContent = 'Loading...';
+                responseEl.className = 'model-response loading';
+                responseEl.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+                
+                // Mark as loading
+                modelsLoading.add(model);
+                console.log(`Adding ${model} to loading set (queued message)`);
+                
+                // Query the model - only send the current queued message
+                const currentMessage = [{ role: 'user', content: queued.message }];
+                modelPromises.push(queryModel(model, currentMessage, requestId));
+            });
+            
+            // Track responses
+            let successCount = 0;
+            let errorCount = 0;
+            const totalModels = queued.pendingModels.length;
+            let completedCount = 0;
+            
+            // Update status as each model completes
+            modelPromises.forEach((promise, index) => {
+                const model = queued.pendingModels[index];
+                promise.then(success => {
+                    completedCount++;
+                    if (success) successCount++;
+                    else errorCount++;
+                    
+                    // Update the placeholder text (find by requestId)
+                    const placeholder = chatHistory.querySelector(`[data-request-id="${requestId}"]`);
+                    if (placeholder) {
+                        if (completedCount === totalModels) {
+                            placeholder.textContent = successCount === totalModels ? 
+                                'Responses received from all models' : 
+                                `Responses received from ${successCount} of ${totalModels} models`;
+                        } else {
+                            placeholder.textContent = `Loading... (${completedCount}/${totalModels} completed)`;
+                        }
+                    }
+                }).catch(() => {
+                    completedCount++;
+                    errorCount++;
+                    modelsLoading.delete(model);
+                    const placeholder = chatHistory.querySelector(`[data-request-id="${requestId}"]`);
+                    if (placeholder) {
+                        placeholder.textContent = `Loading... (${completedCount}/${totalModels} completed)`;
+                    }
+                });
+            });
+        }
+        
+        // Function to restore responses in the model boxes
+        function restoreResponses(requestId) {
+            if (!requestResponses[requestId]) {
+                return;
+            }
+            
+            const data = requestResponses[requestId];
+            const responses = data.responses;
+            
+            // Restore each model's response in its box
+            for (const [model, response] of Object.entries(responses)) {
+                const modelId = model.replace(/\./g, '-');
+                const statusEl = document.getElementById(`status-${modelId}`);
+                const responseEl = document.getElementById(`response-${modelId}`);
+                
+                if (statusEl && responseEl) {
+                    // Restore status
+                    if (response.status === 'success') {
+                        statusEl.className = 'model-status success';
+                        statusEl.textContent = `✓ ${response.responseTime}s`;
+                        responseEl.className = 'model-response';
+                        responseEl.textContent = response.content;
+                    } else {
+                        statusEl.className = 'model-status error';
+                        statusEl.textContent = 'Error';
+                        responseEl.className = 'model-response';
+                        responseEl.innerHTML = `<span class="error-text">Error: ${response.content}</span>`;
+                    }
+                }
             }
         }
 
