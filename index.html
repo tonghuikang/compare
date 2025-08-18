@@ -769,9 +769,8 @@
             chatHistory.scrollTop = chatHistory.scrollHeight;
             
             // Query only available models in parallel (don't await)
-            // Only send the current message, not the entire history
-            const currentMessage = [{ role: 'user', content: message }];
-            const modelPromises = modelsToQuery.map(model => queryModel(model, currentMessage, requestId));
+            // Send the entire conversation history
+            const modelPromises = modelsToQuery.map(model => queryModel(model, messages, requestId));
             
             // Track responses
             let successCount = 0;
@@ -1005,9 +1004,8 @@
                 modelsLoading.add(model);
                 console.log(`Adding ${model} to loading set (queued message)`);
                 
-                // Query the model - only send the current queued message
-                const currentMessage = [{ role: 'user', content: queued.message }];
-                modelPromises.push(queryModel(model, currentMessage, requestId));
+                // Query the model - send the entire conversation history
+                modelPromises.push(queryModel(model, messages, requestId));
             });
             
             // Track responses
