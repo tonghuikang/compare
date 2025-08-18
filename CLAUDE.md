@@ -8,7 +8,7 @@ Testing
 - Run `echo $POE_API_KEY` to get the Poe API key to use
 - Puppeteer execute `testRapidMessages()`
     - Take screenshots immediately and 5 seconds later
-- What to check
+- What to check (please make a TODO list and check off one-by-one)
     - There should not be repeated user messages
     - The user message and the status messages should interleave correctly
         - There should be one and only one status message for one user message

@@ -584,9 +584,8 @@
                     mainContent.innerHTML = `
                         <div class="no-api-key">
                             <h2>⚠️ Failed to Load Models</h2>
-                            <p>Could not fetch available models from the API.</p>
-                            <p>You can specify models manually in the URL:</p>
-                            <code>${window.location.origin}${window.location.pathname}?api_key=${apiKey}&models=Claude-3.5-Sonnet,GPT-4o</code>
+                            <p>Please check that your API key is correct.</p>
+                            <p>Current API key: <code>${apiKey}</code></p>
                         </div>
                     `;
                     return;
