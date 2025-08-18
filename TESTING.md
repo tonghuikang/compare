@@ -7,8 +7,9 @@ What to do
 - Open MCP Puppeteer with window size 1920 x 1000
 - Run `echo $POE_API_KEY` to get the Poe API key to use
 - Puppeteer execute `testRapidMessages()`
-    - Take screenshots immediately and 5 and 15 seconds later
+    - Take screenshots immediately and after 20 seconds
 - Navigate between each response groups by clicking on the status message
+    - Take a screenshot at every navigation
 
 
 What to check (please make a TODO list and check off one-by-one)
@@ -24,7 +25,6 @@ What to check (please make a TODO list and check off one-by-one)
     - Please check the responses to "What is the sum from the last two answers?"
     - Each message must consider the preceeding conversation
     - Do not mix conversation threads - the conversation with each model should be isolated
-- Slow responses should not block successive user messages from being processed
 
 
 ```js
