@@ -384,7 +384,7 @@
         const apiKey = urlParams.get('apiKey') || urlParams.get('api_key');
         const baseUrl = 'https://api.poe.com/v1';
         
-        // Models will be dynamically loaded or configured via URL
+        // Do NOT hardcode models in this list
         let models = [];
 
         let messages = [];
@@ -398,7 +398,30 @@
         // Queue for messages waiting to be processed
         let messageQueue = [];
 
-        function initializeApp() {
+        // Function to fetch available models from Poe API
+        async function fetchAvailableModels() {
+            try {
+                const response = await fetch(`${baseUrl}/models`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch models: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                // Extract model IDs from the response
+                return data.data.map(model => model.id);
+            } catch (error) {
+                console.error('Error fetching models:', error);
+                return null;
+            }
+        }
+
+        async function initializeApp() {
             const mainContent = document.getElementById('mainContent');
 
             if (!apiKey) {
@@ -413,31 +436,66 @@
                 return;
             }
             
-            // Get models from URL parameter or use defaults
+            // Get models from URL parameter or fetch from API
             const modelsParam = urlParams.get('models');
             if (modelsParam) {
                 models = modelsParam.split(',').map(m => m.trim());
             } else {
-                // Default models if none specified
-                models = [
-                    'Claude-3.5-Sonnet',
-                    'Claude-Opus-4.1',
-                    'GPT-4o',
-                    'GPT-4o-Mini',
-                    'Mistral-Large-2',
-                    'Command-R-Plus'
-                ];
-            }
-            
-            if (models.length === 0) {
+                // Fetch available models from Poe API
                 mainContent.innerHTML = `
                     <div class="no-api-key">
-                        <h2>⚠️ No Models Specified</h2>
-                        <p>Please specify which models to query in the URL.</p>
-                        <code>${window.location.origin}${window.location.pathname}?api_key=${apiKey}&models=MODEL1,MODEL2</code>
+                        <h2>Loading...</h2>
+                        <p>Fetching available models from Poe API...</p>
                     </div>
                 `;
-                return;
+                
+                const availableModels = await fetchAvailableModels();
+                if (!availableModels || availableModels.length === 0) {
+                    mainContent.innerHTML = `
+                        <div class="no-api-key">
+                            <h2>⚠️ Failed to Load Models</h2>
+                            <p>Could not fetch available models from the API.</p>
+                            <p>You can specify models manually in the URL:</p>
+                            <code>${window.location.origin}${window.location.pathname}?api_key=${apiKey}&models=Claude-3.5-Sonnet,GPT-4o</code>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Filter to official models only (no custom bots with ':')
+                const officialModels = availableModels.filter(model => !model.includes(':'));
+                
+                // Select best model for each prefix
+                const prefixes = ['GPT-5', 'Claude-Opus', 'Gemini', 'Grok', 'Qwen', 'Kimi', 'Deepseek', 'Mistral', 'Llama', 'GPT-4', 'GPT-3', 'Claude-Sonnet'];
+                models = [];
+                
+                for (const prefix of prefixes) {
+                    // Find all models starting with this prefix
+                    const prefixModels = officialModels.filter(model => 
+                        model.toLowerCase().startsWith(prefix.toLowerCase())
+                    );
+                    
+                    if (prefixModels.length > 0) {
+                        // Filter out models that have a shorter prefix model in the list
+                        const mainModels = prefixModels.filter(model => {
+                            return !prefixModels.some(otherModel => 
+                                otherModel !== model && model.startsWith(otherModel)
+                            );
+                        });
+                        
+                        // If we have main models, pick from them
+                        let candidates = mainModels.length > 0 ? mainModels : prefixModels;
+                        
+                        // Sort candidates and pick the lexicographically largest
+                        // This tends to pick newer versions (e.g., GPT-5 over GPT-4)
+                        candidates.sort();
+                        const selected = candidates[candidates.length - 1];
+                        
+                        if (selected) {
+                            models.push(selected);
+                        }
+                    }
+                }
             }
 
             mainContent.innerHTML = `
