@@ -7,18 +7,36 @@ Chat view - http://<addr>/?api_key=<api_key>
 Archive view - http://<addr>/?conversation_id=<conversation_id>
 
 Navigation
-- Home page will list some saved conversations
+- Home page displays a box where you can pass your API key to start a chat, or list some saved conversations
+    - Putting your API key will lead you to the chat view
     - Clicking on the conversation will lead to the conversation view
+        - Only the title is displayed at the conversation home page
+- Chat view will allow the user to talk to all the models
+    - There is a green button at the bottom right where the user can save the current chat
+        - This button is only visible on localhost
+        - The button does not work if the conversation is empty
 - Archive view will display the conversation in full
-    - Archive view will share the same elements
-        - Instead of 
-- Chat view has a button at the bottom where the user can save the current chat
-    - This button is only visible on localhost
+    - Archive view will share the same elements with chat view
+        - Instead of the ask bar, the description (from comparison_registry.json) will be displayed instead
+        - The ask button will lead to the Chat view
 
 
-# Multi-chat view
 
-Follow these instructions when you are done editing `index.html`.
+# Testing the home page
+
+What to do
+- Open MCP Puppeteer with window size 1920 x 1000
+- Run `echo $POE_API_KEY` to get the Poe API key to use
+
+What to check (please make a TODO list and check off one-by-one)
+- Navigating to the chat view by providing an API key works
+- Navigating to the archive view by clicking on a conversation works
+
+
+
+# Testing the chat view
+
+Follow these instructions when you are done working on the chat view in `index.html`.
 If ANY of these fails, you HAVE to fix `index.html`.
 
 What to do
@@ -69,4 +87,8 @@ function testRapidMessages() {
 // Run the test
 testRapidMessages();
 ```
+
+
+# Testing the archive view
+
 

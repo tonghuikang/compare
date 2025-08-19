@@ -292,9 +292,9 @@
         }
         
         .save-comparison-button {
-            width: 100%;
-            max-width: 1400px;
-            margin: 20px auto 0;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
             padding: 14px 32px;
             background: linear-gradient(135deg, #28a745 0%, #218838 100%);
             color: white;
@@ -304,8 +304,8 @@
             font-weight: 600;
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
-            display: block;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
         }
         
         .save-comparison-button:hover {
@@ -553,18 +553,262 @@
 
         async function initializeApp() {
             const mainContent = document.getElementById('mainContent');
-
-            if (!apiKey) {
+            const conversationId = urlParams.get('conversation_id');
+            
+            // Determine which view to show
+            if (conversationId) {
+                // Archive view - show saved conversation (no API key needed)
+                await showArchiveView(conversationId);
+            } else if (apiKey) {
+                // Chat view - show chat interface
+                await showChatView();
+            } else {
+                // Home page - show saved conversations list
+                await showHomePage();
+            }
+        }
+        
+        async function showHomePage() {
+            const mainContent = document.getElementById('mainContent');
+            
+            // Start with the API key input box
+            let htmlContent = `
+                <div class="header">
+                    <h1>Multi-Model Chat</h1>
+                </div>
+                
+                <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); margin-bottom: 30px;">
+                    <h2 style="font-size: 20px; color: #333; margin-bottom: 20px;">Start a New Chat</h2>
+                    <form onsubmit="event.preventDefault(); const apiKey = document.getElementById('apiKeyInput').value.trim(); if(apiKey) window.location.href='?api_key=' + encodeURIComponent(apiKey);">
+                        <input type="text" id="apiKeyInput" placeholder="Enter your Poe API key" style="
+                            width: 100%;
+                            padding: 14px;
+                            border: 2px solid #e0e0e0;
+                            border-radius: 8px;
+                            font-size: 15px;
+                            margin-bottom: 15px;
+                        ">
+                        <button type="submit" style="
+                            padding: 14px 32px;
+                            background: linear-gradient(135deg, #4a90e2 0%, #2c5282 100%);
+                            color: white;
+                            border: none;
+                            border-radius: 8px;
+                            font-size: 15px;
+                            font-weight: 600;
+                            cursor: pointer;
+                            transition: transform 0.2s, box-shadow 0.2s;
+                        " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(74, 144, 226, 0.4)'" 
+                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                            Start Chat →
+                        </button>
+                    </form>
+                    <p style="margin-top: 15px; color: #666; font-size: 14px;">
+                        Get your API key from <a href="https://poe.com/api_key" target="_blank" style="color: #4a90e2;">poe.com/api_key</a>
+                    </p>
+                </div>
+            `;
+            
+            try {
+                // Fetch the registry of saved conversations
+                const response = await fetch('/comparison_registry.json');
+                
+                if (response.ok) {
+                    const registry = await response.json();
+                    
+                    if (registry && registry.length > 0) {
+                        // Add saved conversations section
+                        htmlContent += `
+                            <h2 style="font-size: 20px; color: #333; margin-bottom: 20px;">Saved Conversations</h2>
+                            <div style="display: flex; flex-direction: column; gap: 15px;">
+                                ${registry.map(conv => `
+                                    <div style="
+                                        background: white;
+                                        border-radius: 12px;
+                                        padding: 20px;
+                                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                                        cursor: pointer;
+                                        transition: transform 0.2s, box-shadow 0.2s;
+                                    " 
+                                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0, 0, 0, 0.15)'" 
+                                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0, 0, 0, 0.1)'"
+                                    onclick="window.location.href='?conversation_id=${conv.id}'">
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <div style="flex: 1;">
+                                                <h3 style="margin: 0; color: #333; font-size: 16px;">
+                                                    ${conv.title.length > 80 ? conv.title.substring(0, 80) + '...' : conv.title}
+                                                </h3>
+                                                <div style="font-size: 12px; color: #999; margin-top: 8px;">
+                                                    ${conv.datetime}
+                                                </div>
+                                            </div>
+                                            <div style="color: #4a90e2; font-size: 20px; margin-left: 20px;">
+                                                →
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading conversations:', error);
+            }
+            
+            mainContent.innerHTML = htmlContent;
+        }
+        
+        async function showArchiveView(conversationId) {
+            const mainContent = document.getElementById('mainContent');
+            
+            try {
+                // Load conversation data
+                const response = await fetch(`/comparisons/${conversationId}.json`);
+                if (!response.ok) {
+                    mainContent.innerHTML = `
+                        <div class="no-api-key">
+                            <h2>Conversation Not Found</h2>
+                            <p>The requested conversation could not be found.</p>
+                            <p><a href="/" style="color: #4a90e2;">← Back to Home</a></p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                const data = await response.json();
+                
+                // Use the saved models from the conversation
+                models = data.models || [];
+                messages = data.messages || [];
+                requestResponses = data.requestResponses || {};
+                
+                // Get description from registry if available
+                let description = '';
+                try {
+                    const regResponse = await fetch('/comparison_registry.json');
+                    if (regResponse.ok) {
+                        const registry = await regResponse.json();
+                        const convEntry = registry.find(c => c.id === conversationId);
+                        if (convEntry && convEntry.description) {
+                            description = convEntry.description;
+                        }
+                    }
+                } catch (e) {
+                    console.error('Error fetching description:', e);
+                }
+                
+                // Display the archived conversation (similar to chat view but read-only)
+                mainContent.innerHTML = `
+                    <div class="header">
+                        <h1>${data.title || 'Archived Conversation'}</h1>
+                        <p style="margin: 10px 0;">
+                            <a href="/" style="color: #4a90e2; text-decoration: none; margin-right: 20px;">← Back to Conversations</a>
+                            <span style="color: #666; font-size: 14px;">${data.datetime || ''}</span>
+                        </p>
+                    </div>
+                    
+                    <div class="input-container">
+                        ${description ? `
+                            <div style="
+                                background: #f9f9f9;
+                                padding: 16px;
+                                border-radius: 8px;
+                                margin-bottom: 15px;
+                                border: 1px solid #e0e0e0;
+                            ">
+                                <p style="color: #666; font-size: 14px; margin: 0; line-height: 1.6;">
+                                    ${description}
+                                </p>
+                            </div>
+                        ` : ''}
+                        <div class="chat-history" id="chatHistory" style="max-height: 500px;"></div>
+                    </div>
+                    
+                    <div class="models-grid" id="modelsGrid">
+                        ${models.map(model => `
+                            <div class="model-card">
+                                <div class="model-header">
+                                    <span>${model}</span>
+                                    <span class="model-status" id="status-${model.replace(/\./g, '-')}">Archived</span>
+                                </div>
+                                <div class="model-response" id="response-${model.replace(/\./g, '-')}">
+                                    Click a message above to view responses
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <button onclick="window.location.href='?api_key='" style="
+                        position: fixed;
+                        bottom: 20px;
+                        right: 20px;
+                        padding: 14px 32px;
+                        background: linear-gradient(135deg, #4a90e2 0%, #2c5282 100%);
+                        color: white;
+                        border: none;
+                        border-radius: 12px;
+                        font-size: 15px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: transform 0.2s, box-shadow 0.2s;
+                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+                        z-index: 1000;
+                    " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(74, 144, 226, 0.4)'" 
+                       onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0, 0, 0, 0.2)'">
+                        Start New Chat →
+                    </button>
+                `;
+                
+                // Populate chat history
+                const chatHistory = document.getElementById('chatHistory');
+                messages.forEach(msg => {
+                    const msgDiv = document.createElement('div');
+                    msgDiv.className = `message ${msg.role}`;
+                    msgDiv.textContent = msg.content;
+                    chatHistory.appendChild(msgDiv);
+                });
+                
+                // Add clickable system messages for each request
+                Object.keys(requestResponses).forEach(requestId => {
+                    const req = requestResponses[requestId];
+                    const systemMsg = document.createElement('div');
+                    systemMsg.className = 'message system clickable';
+                    const successCount = Object.values(req.responses).filter(r => r.status === 'success').length;
+                    const totalCount = Object.keys(req.responses).length;
+                    systemMsg.textContent = `${successCount}/${totalCount} responded`;
+                    systemMsg.dataset.requestId = requestId;
+                    systemMsg.onclick = () => restoreResponses(requestId);
+                    systemMsg.title = 'Click to view responses';
+                    chatHistory.appendChild(systemMsg);
+                });
+                
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+                
+                // Show the most recent responses by default
+                const mostRecentId = Object.keys(requestResponses).sort((a, b) => parseFloat(b) - parseFloat(a))[0];
+                if (mostRecentId) {
+                    restoreResponses(mostRecentId);
+                }
+                
+            } catch (error) {
+                console.error('Error loading conversation:', error);
                 mainContent.innerHTML = `
                     <div class="no-api-key">
-                        <h2>🔑 API Key Required</h2>
-                        <p>To use this multi-model chat interface, provide your Poe API key in the URL.</p>
-                        <code>${window.location.origin}${window.location.pathname}?api_key=YOUR_API_KEY</code>
-                        <p>Get your API key from <a href="https://poe.com/api_key" target="_blank">poe.com/api_key</a></p>
+                        <h2>Error Loading Conversation</h2>
+                        <p>Failed to load the conversation. Please try again.</p>
+                        <p><a href="/" style="color: #4a90e2;">← Back to Home</a></p>
                     </div>
                 `;
-                return;
             }
+        }
+        
+        async function showChatView() {
+            const mainContent = document.getElementById('mainContent');
+            
+            // Reset messages for new chat
+            messages = [];
+            requestResponses = {};
             
             // Get models from URL parameter or fetch from API
             const modelsParam = urlParams.get('models');
