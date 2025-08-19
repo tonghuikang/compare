@@ -1,6 +1,6 @@
 Serving
 - Puppeteer navigate to `http://localhost:64088/`
-- `./start_server.sh`
+- If the server is not running, run `./start_server.sh`
 
 
 Testing

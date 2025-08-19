@@ -25,6 +25,9 @@ Navigation
 
 # Testing the home page
 
+Follow these instructions when you are done working on the chat view in `index.html`.
+If ANY of these fails, you HAVE to fix `index.html`.
+
 What to do
 - Open MCP Puppeteer with window size 1920 x 1000
 - Run `echo $POE_API_KEY` to get the Poe API key to use
@@ -97,4 +100,9 @@ testRapidMessages();
 
 # Testing the archive view
 
+What to do
+- Navigate between each response groups by clicking on the status message
+    - Take a screenshot at every navigation
 
+What to check (please make a TODO list and check off one-by-one)
+- The navigation works

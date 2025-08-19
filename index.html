@@ -836,9 +836,9 @@
                                 margin-bottom: 15px;
                                 border: 1px solid #e0e0e0;
                             ">
-                                <p style="color: #666; font-size: 14px; margin: 0; line-height: 1.6;">
-                                    ${description}
-                                </p>
+                                <div id="descriptionContent" style="color: #666; font-size: 14px; line-height: 1.6;">
+                                    ${marked.parse(description)}
+                                </div>
                             </div>
                         ` : ''}
                         <div class="chat-history" id="chatHistory" style="max-height: 500px;"></div>
