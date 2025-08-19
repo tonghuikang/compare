@@ -1,6 +1,24 @@
 # Instructions to test `index.html`
 
-Follow these instructions when you are doing editing `index.html`.
+Page directory
+
+Home page - http://<addr>/
+Chat view - http://<addr>/?api_key=<api_key>
+Archive view - http://<addr>/?conversation_id=<conversation_id>
+
+Navigation
+- Home page will list some saved conversations
+    - Clicking on the conversation will lead to the conversation view
+- Archive view will display the conversation in full
+    - Archive view will share the same elements
+        - Instead of 
+- Chat view has a button at the bottom where the user can save the current chat
+    - This button is only visible on localhost
+
+
+# Multi-chat view
+
+Follow these instructions when you are done editing `index.html`.
 If ANY of these fails, you HAVE to fix `index.html`.
 
 What to do
