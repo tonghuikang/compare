@@ -691,10 +691,6 @@
             
             // Start with the API key input box
             let htmlContent = `
-                <div class="header">
-                    <h1>Multi-Model Chat</h1>
-                </div>
-                
                 <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); margin-bottom: 30px;">
                     <h2 style="font-size: 20px; color: #333; margin-bottom: 20px;">Start a New Chat</h2>
                     <form onsubmit="event.preventDefault(); const apiKey = document.getElementById('apiKeyInput').value.trim(); if(apiKey) window.location.href='?api_key=' + encodeURIComponent(apiKey);">
@@ -737,7 +733,7 @@
                     if (registry && registry.length > 0) {
                         // Add saved conversations section
                         htmlContent += `
-                            <h2 style="font-size: 20px; color: #333; margin-bottom: 20px;">Saved Conversations</h2>
+                            <h2 style="font-size: 20px; color: white; margin-bottom: 20px;">Saved Comparisons</h2>
                             <div style="display: flex; flex-direction: column; gap: 15px;">
                                 ${registry.map(conv => `
                                     <div style="
@@ -762,7 +758,7 @@
                                                     </div>
                                                 ` : ''}
                                                 <div style="font-size: 12px; color: #999; margin-top: 8px;">
-                                                    ${conv.datetime}
+                                                    ${conv.datetime.split(' ')[0]}
                                                 </div>
                                             </div>
                                             <div style="color: #4a90e2; font-size: 20px; margin-left: 20px;">

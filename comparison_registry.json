@@ -1,5 +1,29 @@
 [
   {
+    "datetime": "2025-08-19 06:57:58",
+    "title": "What is 0 to the power of 0? Use LaTeX",
+    "id": "2025-08-19-06-57-58",
+    "description": "I use this set of questions to test whether this app is working."
+  },
+  {
+    "datetime": "2025-08-19 06:52:30",
+    "title": "Draw ASCII art of the logo of the company that",
+    "id": "2025-08-19-06-52-30",
+    "description": "ASCII is a verifiable task"
+  },
+  {
+    "datetime": "2025-08-19 06:47:22",
+    "title": "Estimate the number of parameters you have",
+    "id": "2025-08-19-06-47-22",
+    "description": "Probably they should be aware who they are, and how much they cost per token, and make some estimate from there."
+  },
+  {
+    "datetime": "2025-08-19 06:43:36",
+    "title": "Generate exactly 100 random LLM tokens with the tokenizer that",
+    "id": "2025-08-19-06-43-36",
+    "description": "I am curious if the LLM is aware of their tokenization."
+  },
+  {
     "datetime": "2025-08-19 06:25:58",
     "title": "In which anime the traveling salesman problem was described?",
     "id": "2025-08-19-06-25-58",
