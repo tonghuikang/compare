@@ -15,6 +15,7 @@ Navigation
     - There is a green button at the bottom right where the user can save the current chat
         - This button is only visible on localhost
         - The button does not work if the conversation is empty
+        - (Please git reset the files after testing them)
 - Archive view will display the conversation in full
     - Archive view will share the same elements with chat view
         - Instead of the ask bar, the description (from comparison_registry.json) will be displayed instead
@@ -67,21 +68,26 @@ What to check (please make a TODO list and check off one-by-one)
 // Test script for rapid succession messages
 // Run this in the browser console
 
-function testRapidMessages() {
+async function testRapidMessages() {
     const input = document.getElementById('messageInput');
     const button = document.getElementById('sendButton');
     
-    // Send 3 "hi" messages with no delay between them
+    // Helper function to wait
+    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+    
+    // Send messages with delay between them
     for (let i = 0; i < 2; i++) {
         input.value = 'What is ' + i + ' to the power of ' + i + '? Use LaTeX and markdown.';
         button.click();
         console.log(`Sent message ${i + 1}`);
+        await sleep(1000); // Wait 1 second between messages
     }
+    
     input.value = 'What is the sum from the last two answers?';
     button.click();
     console.log(`Sent final message`);
     
-    console.log('Finished sending 3 messages rapidly');
+    console.log('Finished sending 3 messages with delays');
 }
 
 // Run the test

@@ -45,6 +45,10 @@ class ComparisonHandler(http.server.SimpleHTTPRequestHandler):
                     "id": data['id']
                 }
                 
+                # Add description if provided
+                if 'description' in data:
+                    registry_entry['description'] = data['description']
+                
                 # Check if entry already exists
                 existing = False
                 for i, entry in enumerate(registry):
