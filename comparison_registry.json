@@ -1,5 +1,23 @@
 [
   {
+    "datetime": "2025-08-21 03:39:27",
+    "title": "Predict the lyrics to Taylor Swift's upcoming song \"The Life",
+    "id": "2025-08-21-03-39-27",
+    "description": "As of writing, the song is yet to be released."
+  },
+  {
+    "datetime": "2025-08-21 03:36:48",
+    "title": "Predict the songs to Taylor Swift's new album \"The Life",
+    "id": "2025-08-21-03-36-48",
+    "description": "The actual song titles are\n\n1.\t\"The Fate of Ophelia\"\t \n2.\t\"Elizabeth Taylor\"\t \n3.\t\"Opalite\"\t \n4.\t\"Father Figure\"\t \n5.\t\"Eldest Daughter\"\t \n6.\t\"Ruin the Friendship\"\t \n7.\t\"Actually Romantic\"\t \n8.\t\"Wish List\"\t \n9.\t\"Wood\"\t \n10.\t\"Cancelled!\"\t \n11.\t\"Honey\"\t \n12.\t\"The Life of a Showgirl\" (featuring Sabrina Carpenter)\n\nIt seems that song titles usually don't closely follow the theme of the album title, and this observation could have been backtested with Taylor Swift previous albums."
+  },
+  {
+    "datetime": "2025-08-21 03:26:01",
+    "title": "You have a classifier with 100% precision. You have another",
+    "id": "2025-08-21-03-26-01",
+    "description": "If you take the intersection, you will only get a classifier with 100% precision, with no guarantees on recall.\n\nIf you take the union, you will only get a classifier with 100% recall, with no guarantees on precision - actually you will just get the same initial classifier with 100% recall."
+  },
+  {
     "datetime": "2025-08-19 07:52:59",
     "title": "Which move in this game is the most brilliant? 1.",
     "id": "2025-08-19-07-52-59",
