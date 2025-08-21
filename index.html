@@ -879,18 +879,32 @@
                     </button>
                 `;
                 
-                // Populate chat history
+                // Populate chat history with proper interleaving
                 const chatHistory = document.getElementById('chatHistory');
-                messages.forEach(msg => {
-                    const msgDiv = document.createElement('div');
-                    msgDiv.className = `message ${msg.role}`;
-                    msgDiv.textContent = msg.content;
-                    chatHistory.appendChild(msgDiv);
-                });
                 
-                // Add clickable system messages for each request
-                Object.keys(requestResponses).forEach(requestId => {
+                // Sort request IDs by timestamp
+                const sortedRequestIds = Object.keys(requestResponses).sort((a, b) => parseFloat(a) - parseFloat(b));
+                
+                // Track which message index we're at
+                let messageIndex = 0;
+                
+                // For each request, add the corresponding user message and then the system message
+                sortedRequestIds.forEach(requestId => {
                     const req = requestResponses[requestId];
+                    
+                    // Add the user message that corresponds to this request
+                    if (messageIndex < messages.length) {
+                        const msg = messages[messageIndex];
+                        if (msg.role === 'user') {
+                            const msgDiv = document.createElement('div');
+                            msgDiv.className = `message ${msg.role}`;
+                            msgDiv.textContent = msg.content;
+                            chatHistory.appendChild(msgDiv);
+                            messageIndex++;
+                        }
+                    }
+                    
+                    // Add the system message for this request
                     const systemMsg = document.createElement('div');
                     systemMsg.className = 'message system clickable';
                     const successCount = Object.values(req.responses).filter(r => r.status === 'success').length;
@@ -1060,28 +1074,35 @@
             
             // Check which models are available
             const modelsToQuery = [];
-            models.forEach(model => {
-                const modelId = model.replace(/\./g, '-');
-                const statusEl = document.getElementById(`status-${modelId}`);
-                const responseEl = document.getElementById(`response-${modelId}`);
-                
-                if (!modelsLoading.has(model)) {
-                    // Model is available, reset it and add to query list
-                    statusEl.className = 'model-status loading';
-                    statusEl.textContent = 'Loading...';
-                    responseEl.className = 'model-response loading';
-                    responseEl.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
-                    modelsToQuery.push(model);
-                    modelsLoading.add(model);
-                    console.log(`Adding ${model} to loading set`);
-                } else {
-                    // Model is still loading from previous request, show status
-                    console.log(`${model} is still loading from previous request`);
-                    if (!statusEl.textContent.includes('Busy')) {
-                        statusEl.textContent = 'Busy...';
+            
+            // If there are already queued messages, this one must also be queued to maintain order
+            if (messageQueue.length > 0) {
+                console.log('Previous messages are queued - adding this message to queue to maintain order');
+                modelsToQuery.length = 0; // Force queueing
+            } else {
+                models.forEach(model => {
+                    const modelId = model.replace(/\./g, '-');
+                    const statusEl = document.getElementById(`status-${modelId}`);
+                    const responseEl = document.getElementById(`response-${modelId}`);
+                    
+                    if (!modelsLoading.has(model)) {
+                        // Model is available, reset it and add to query list
+                        statusEl.className = 'model-status loading';
+                        statusEl.textContent = 'Loading...';
+                        responseEl.className = 'model-response loading';
+                        responseEl.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+                        modelsToQuery.push(model);
+                        modelsLoading.add(model);
+                        console.log(`Adding ${model} to loading set`);
+                    } else {
+                        // Model is still loading from previous request, show status
+                        console.log(`${model} is still loading from previous request`);
+                        if (!statusEl.textContent.includes('Busy')) {
+                            statusEl.textContent = 'Busy...';
+                        }
                     }
-                }
-            });
+                });
+            }
             
             // If no models to query, add to queue for later processing
             if (modelsToQuery.length === 0) {
@@ -1094,13 +1115,14 @@
                     message: message,
                     timestamp: new Date(),
                     placeholderId: placeholderId,
-                    pendingModels: [...models] // Track which models should handle this message
+                    pendingModels: [...models], // Track which models should handle this message
+                    messagesSnapshot: [...messages] // Store the conversation state at this point
                 });
                 
                 // Add a system message placeholder that will be updated when processed
                 const queuedMessage = document.createElement('div');
                 queuedMessage.className = 'message system';
-                queuedMessage.textContent = 'Queued';
+                queuedMessage.textContent = 'Queued (all models busy)';
                 queuedMessage.id = placeholderId;
                 chatHistory.appendChild(queuedMessage);
                 chatHistory.scrollTop = chatHistory.scrollHeight;
@@ -1204,6 +1226,32 @@
             const responseEl = document.getElementById(`response-${modelId}`);
             const startTime = Date.now();
             
+            // Build conversation history with this model's previous responses
+            const conversationHistory = [];
+            for (let i = 0; i < messages.length; i++) {
+                const msg = messages[i];
+                conversationHistory.push(msg);
+                
+                // After each user message (except the last), add the model's response if it exists
+                if (msg.role === 'user' && i < messages.length - 1) {
+                    // Find the response for this message from previous requests
+                    const previousRequests = Object.keys(requestResponses).sort((a, b) => parseFloat(a) - parseFloat(b));
+                    for (const prevReqId of previousRequests) {
+                        if (parseFloat(prevReqId) >= parseFloat(requestId)) break; // Don't include current or future
+                        const prevReq = requestResponses[prevReqId];
+                        if (prevReq.question === msg.content && prevReq.responses[model]) {
+                            if (prevReq.responses[model].status === 'success') {
+                                conversationHistory.push({
+                                    role: 'assistant',
+                                    content: prevReq.responses[model].content
+                                });
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            
             try {
                 const response = await fetch(`${baseUrl}/chat/completions`, {
                     method: 'POST',
@@ -1213,7 +1261,7 @@
                     },
                     body: JSON.stringify({
                         model: model,
-                        messages: messages,
+                        messages: conversationHistory,
                         stream: false
                     })
                 });
@@ -1367,8 +1415,8 @@
                 modelsLoading.add(model);
                 console.log(`Adding ${model} to loading set (queued message)`);
                 
-                // Query the model - send the entire conversation history
-                modelPromises.push(queryModel(model, messages, requestId));
+                // Query the model - send the conversation history snapshot
+                modelPromises.push(queryModel(model, queued.messagesSnapshot, requestId));
             });
             
             // Track responses
