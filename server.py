@@ -21,12 +21,14 @@ class ComparisonHandler(http.server.SimpleHTTPRequestHandler):
                 if not os.path.exists('comparisons'):
                     os.makedirs('comparisons')
                 
-                # Save the comparison data to a file (without description)
+                # Save the comparison data to a file (without description and title)
                 filename = f"comparisons/{data['id']}.json"
                 comparison_data = data.copy()
-                # Remove description from the file copy (keep it only in registry)
+                # Remove description and title from the file copy (keep them only in registry)
                 if 'description' in comparison_data:
                     del comparison_data['description']
+                if 'title' in comparison_data:
+                    del comparison_data['title']
                 with open(filename, 'w') as f:
                     json.dump(comparison_data, f, indent=2)
                 
@@ -42,9 +44,8 @@ class ComparisonHandler(http.server.SimpleHTTPRequestHandler):
                     except:
                         registry = []
                 
-                # Add new entry
+                # Add new entry (without datetime, which stays in the comparison file)
                 registry_entry = {
-                    "datetime": data['datetime'],
                     "title": data['title'],
                     "id": data['id']
                 }
@@ -64,8 +65,8 @@ class ComparisonHandler(http.server.SimpleHTTPRequestHandler):
                 if not existing:
                     registry.append(registry_entry)
                 
-                # Sort by datetime descending
-                registry.sort(key=lambda x: x['datetime'], reverse=True)
+                # Sort by ID descending (which contains the datetime as part of the ID)
+                registry.sort(key=lambda x: x['id'], reverse=True)
                 
                 # Save updated registry
                 with open(registry_file, 'w') as f:

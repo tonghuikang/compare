@@ -1,96 +1,80 @@
 [
   {
-    "datetime": "2025-08-23 06:23:58",
     "title": "Write the 2025's version of We Live in Singapura",
     "id": "2025-08-23-06-23-58",
     "description": "Hossan Leong performed 'We Live in Singapura' some time back in [2006](https://www.youtube.com/watch?v=ch-z5s2JabY). Hossan Leong has since recorded a [2025](https://www.youtube.com/shorts/8Pda80jIYUI) [version](https://www.facebook.com/watch/?v=1093912886008893)."
   },
   {
-    "datetime": "2025-08-21 15:32:55",
     "title": "What is 0 to the power of 0? Use LaTeX",
     "id": "2025-08-21-15-32-55",
     "description": "I use this set of questions to test whether this app is working."
   },
   {
-    "datetime": "2025-08-21 03:39:27",
     "title": "Predict the lyrics to Taylor Swift's upcoming song \"The Life",
     "id": "2025-08-21-03-39-27",
     "description": "As of writing, the song is yet to be released."
   },
   {
-    "datetime": "2025-08-21 03:36:48",
     "title": "Predict the songs to Taylor Swift's new album \"The Life",
     "id": "2025-08-21-03-36-48",
     "description": "The actual song titles are\n\n1.\t\"The Fate of Ophelia\"\t \n2.\t\"Elizabeth Taylor\"\t \n3.\t\"Opalite\"\t \n4.\t\"Father Figure\"\t \n5.\t\"Eldest Daughter\"\t \n6.\t\"Ruin the Friendship\"\t \n7.\t\"Actually Romantic\"\t \n8.\t\"Wish List\"\t \n9.\t\"Wood\"\t \n10.\t\"Cancelled!\"\t \n11.\t\"Honey\"\t \n12.\t\"The Life of a Showgirl\" (featuring Sabrina Carpenter)\n\nIt seems that song titles usually don't closely follow the theme of the album title, and this observation could have been backtested with Taylor Swift previous albums."
   },
   {
-    "datetime": "2025-08-21 03:26:01",
     "title": "You have a classifier with 100% precision. You have another",
     "id": "2025-08-21-03-26-01",
     "description": "If you take the intersection, you will only get a classifier with 100% precision, with no guarantees on recall.\n\nIf you take the union, you will only get a classifier with 100% recall, with no guarantees on precision - actually you will just get the same initial classifier with 100% recall."
   },
   {
-    "datetime": "2025-08-19 07:52:59",
     "title": "Which move in this game is the most brilliant? 1.",
     "id": "2025-08-19-07-52-59",
     "description": "According to [GothamChess](https://www.youtube.com/watch?v=IEKZI9IUHC4) on YouTube, it was Nxd5 on move 15. I do not understand chess at all, though."
   },
   {
-    "datetime": "2025-08-19 06:52:30",
     "title": "Draw ASCII art of the logo of the company that",
     "id": "2025-08-19-06-52-30",
     "description": "ASCII is a verifiable task"
   },
   {
-    "datetime": "2025-08-19 06:47:22",
     "title": "Estimate the number of parameters you have",
     "id": "2025-08-19-06-47-22",
     "description": "Probably they should be aware who they are, and how much they cost per token, and make some estimate from there."
   },
   {
-    "datetime": "2025-08-19 06:43:36",
     "title": "Generate exactly 100 random LLM tokens with the tokenizer that",
     "id": "2025-08-19-06-43-36",
     "description": "I am curious if the LLM is aware of their tokenization."
   },
   {
-    "datetime": "2025-08-19 06:25:58",
     "title": "In which anime the traveling salesman problem was described?",
     "id": "2025-08-19-06-25-58",
     "description": "The correct answer is \"Science Fell in Love, So I Tried to Prove It\".\n\nIt is okay if you do not know the answer, even if you have many billions of parameters there are much better knowledge to store. The point here is that you should not confidently declare a wrong answer."
   },
   {
-    "datetime": "2025-08-19 06:16:21",
     "title": "Translate \u3057\u304b\u306e\u3053\u306e\u3053\u306e\u3053\u3053\u3057\u305f\u3093\u305f\u3093",
     "id": "2025-08-19-06-16-21",
     "description": "This is the title of a [manga / anime](https://en.wikipedia.org/wiki/My_Deer_Friend_Nokotan) and their [opening piece](https://www.youtube.com/watch?v=ZZvIVRQ4E7I)."
   },
   {
-    "datetime": "2025-08-19 06:13:56",
     "title": "What is \u66f9\u6c0f\u5b97\u4eb2\u4f1a?",
     "id": "2025-08-19-06-13-56",
     "description": "Please refer to the [Wiktionary](https://en.wiktionary.org/wiki/\u66f9\u6c0f\u5b97\u89aa\u6703) for what the answer should include."
   },
   {
-    "datetime": "2025-08-19 06:07:12",
     "title": "\u771f\u4e0d\u6127\u662f\u6697\u5f71\u5927\u4eba",
     "id": "2025-08-19-06-07-12",
     "description": "The original text is \u3055\u3059\u304c\u306f\u30b7\u30e3\u30c9\u30a6\u69d8\uff01from the anime / manga [The Eminence in Shadow](https://en.wikipedia.org/wiki/The_Eminence_in_Shadow)."
   },
   {
-    "datetime": "2025-08-19 06:04:04",
     "title": "How much GPU memory is needed to finetune an LLM",
     "id": "2025-08-19-06-04-04",
     "description": "I needed to figure this out for myself. Apparently I have trouble squeezing the training into one H100 for sequence length of size 5000."
   },
   {
-    "datetime": "2025-08-19 05:49:55",
     "title": "Country roads",
     "id": "2025-08-19-05-49-55",
     "description": "You are supposed to complete the [song](https://www.youtube.com/watch?v=1vrEljMfXYo&t=29s)."
   },
   {
-    "datetime": "2025-08-18 05:57:29",
     "title": "hi",
     "description": "We see how the LLM responds to the standard greeting 'hi'.",
     "id": "2025-08-18-05-57-29"
