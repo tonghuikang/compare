@@ -1661,16 +1661,25 @@
                     firstUserMessage.content.split(' ').slice(0, 10).join(' ') : 
                     'Untitled Comparison';
                 
-                // Create timestamp for ID
+                // Create timestamp for ID (format: YYYY-MM-DD-HH-MM-SS)
                 const now = new Date();
-                const id = now.toISOString().replace(/T/, '-').replace(/:/g, '-').replace(/\..+/, '').toLowerCase();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+                const id = `${year}-${month}-${day}-${hours}-${minutes}-${seconds}`;
+                
+                // Format datetime as YYYY-MM-DD HH:MM:SS
+                const datetimeStr = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
                 
                 // Prepare comparison data
                 const comparisonData = {
                     id: id,
                     title: title,
                     description: modalResult.description, // Add description from modal
-                    datetime: now.toISOString().replace(/T/, ' ').replace(/\..+/, ''),
+                    datetime: datetimeStr,
                     messages: messages,
                     requestResponses: requestResponses,
                     models: models,
