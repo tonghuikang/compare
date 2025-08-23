@@ -21,10 +21,14 @@ class ComparisonHandler(http.server.SimpleHTTPRequestHandler):
                 if not os.path.exists('comparisons'):
                     os.makedirs('comparisons')
                 
-                # Save the comparison data to a file
+                # Save the comparison data to a file (without description)
                 filename = f"comparisons/{data['id']}.json"
+                comparison_data = data.copy()
+                # Remove description from the file copy (keep it only in registry)
+                if 'description' in comparison_data:
+                    del comparison_data['description']
                 with open(filename, 'w') as f:
-                    json.dump(data, f, indent=2)
+                    json.dump(comparison_data, f, indent=2)
                 
                 # Update the registry
                 registry_file = 'comparison_registry.json'

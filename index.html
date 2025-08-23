@@ -807,7 +807,7 @@
                 messages = data.messages || [];
                 requestResponses = data.requestResponses || {};
                 
-                // Get description from registry if available
+                // Get description from registry (descriptions are no longer in individual files)
                 let description = '';
                 try {
                     const regResponse = await fetch('/comparison_registry.json');
@@ -819,7 +819,7 @@
                         }
                     }
                 } catch (e) {
-                    console.error('Error fetching description:', e);
+                    console.error('Error fetching description from registry:', e);
                 }
                 
                 // Display the archived conversation (similar to chat view but read-only)

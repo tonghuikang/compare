@@ -1,7 +1,6 @@
 {
   "id": "2025-08-21-03-36-48",
   "title": "Predict the songs to Taylor Swift's new album \"The Life",
-  "description": "The actual song titles are\n\n1.\t\"The Fate of Ophelia\"\t \n2.\t\"Elizabeth Taylor\"\t \n3.\t\"Opalite\"\t \n4.\t\"Father Figure\"\t \n5.\t\"Eldest Daughter\"\t \n6.\t\"Ruin the Friendship\"\t \n7.\t\"Actually Romantic\"\t \n8.\t\"Wish List\"\t \n9.\t\"Wood\"\t \n10.\t\"Cancelled!\"\t \n11.\t\"Honey\"\t \n12.\t\"The Life of a Showgirl\" (featuring Sabrina Carpenter)\n\nIt seems that song titles usually don't closely follow the theme of the album title, and this observation could have been backtested with Taylor Swift previous albums.",
   "datetime": "2025-08-21 03:36:48",
   "messages": [
     {

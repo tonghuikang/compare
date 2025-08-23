@@ -1,7 +1,6 @@
 {
   "id": "2025-08-21-03-26-01",
   "title": "You have a classifier with 100% precision. You have another",
-  "description": "If you take the intersection, you will only get a classifier with 100% precision, with no guarantees on recall.\n\nIf you take the union, you will only get a classifier with 100% recall, with no guarantees on precision - actually you will just get the same initial classifier with 100% recall.",
   "datetime": "2025-08-21 03:26:01",
   "messages": [
     {
