@@ -51,7 +51,7 @@
           "responseTime": "6.6",
           "status": "success"
         },
-        "Deepseek-V3-FW": {
+        "DeepSeek-V3": {
           "content": "The **Traveling Salesman Problem (TSP)**\u2014a classic optimization problem in computer science\u2014has been referenced in a few anime, but one notable example is:  \n\n### **\"Steins;Gate\" (2011)**  \nIn **Episode 12**, Ruka Urushibara mentions the **Traveling Salesman Problem** while discussing time travel and computation. The TSP is briefly explained as an example of a difficult problem to solve, which ties into the anime's themes of parallel timelines and decision-making.  \n\n### **Other Possible References:**  \nWhile not a direct explanation, some anime with mathematical or computational themes (like **\"No Game No Life\"** or **\"The Melancholy of Haruhi Suzumiya\"**) may allude to optimization problems similar to TSP.  \n\nWould you like details on how the TSP relates to the plot of *Steins;Gate*?",
           "responseTime": "7.0",
           "status": "success"
@@ -82,7 +82,7 @@
     "Grok-4",
     "Qwen3-Coder-480B-T",
     "Kimi-K2",
-    "Deepseek-V3-FW",
+    "DeepSeek-V3",
     "Mistral-Small-3",
     "Llama-4-Scout",
     "GPT-4o",

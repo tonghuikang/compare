@@ -61,7 +61,7 @@
           "responseTime": "8.9",
           "status": "success"
         },
-        "Deepseek-V3-FW": {
+        "DeepSeek-V3": {
           "content": "The song **\"Take Me Home, Country Roads\"** is a classic folk-rock anthem by **John Denver**, released in 1971. It celebrates the beauty of **West Virginia** and the nostalgic longing for home. Here are some key details:\n\n### **Lyrics (Chorus)**  \n*\"Country roads, take me home  \nTo the place I belong  \nWest Virginia, mountain mama  \nTake me home, country roads...\"*\n\n### **Fun Facts**  \n- Written by **John Denver, Bill Danoff, and Taffy Nivert**.  \n- Despite its association with West Virginia, the song was inspired by **Maryland** (where Danoff lived).  \n- Became one of West Virginia\u2019s official state songs in 2014.  \n- Covered by many artists, including **Olivia Newton-John, Toots and the Maytals**, and even featured in films like *Whisper of the Heart* (Studio Ghibli).  \n\n### **Why It\u2019s Iconic**  \n- Universal theme of **homecoming** and love for rural landscapes.  \n- Catchy melody and heartfelt lyrics resonate across generations.  \n\nWant the full lyrics, covers, or more trivia? Let me know! \ud83c\udfb6",
           "responseTime": "9.7",
           "status": "success"
@@ -82,7 +82,7 @@
     "Grok-4",
     "Qwen3-Coder-480B-T",
     "Kimi-K2",
-    "Deepseek-V3-FW",
+    "DeepSeek-V3",
     "Mistral-Small-3",
     "Llama-4-Scout",
     "GPT-4o",

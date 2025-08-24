@@ -46,7 +46,7 @@
           "responseTime": "8.8",
           "status": "success"
         },
-        "Deepseek-V3-FW": {
+        "DeepSeek-V3": {
           "content": "The phrase **\"\u3057\u304b\u306e\u3053\u306e\u3053\u306e\u3053\u3053\u3057\u305f\u3093\u305f\u3093\"** is a playful, nonsensical tongue-twister in Japanese, often used for vocal practice or amusement. It doesn't have a direct meaning, but here's a breakdown of its components:\n\n- **\u3057\u304b (shika)** \u2013 \"deer\" or \"only\"  \n- **\u306e (no)** \u2013 possessive particle (\"of\")  \n- **\u3053\u306e (kono)** \u2013 \"this\"  \n- **\u3053 (ko)** \u2013 \"child\" or a repeating syllable  \n- **\u3053\u3053 (koko)** \u2013 \"here\"  \n- **\u3057\u305f\u3093 (shitan)** \u2013 possibly a playful variation of **\u3057\u305f (shita**, \"did\"/\"under\") + **\u305f\u3093 (tan)**, a cute suffix  \n\n### Possible Interpretation:  \nIt could whimsically imply something like:  \n*\"The deer's little child, right here, did this\u2014tan!\"*  \n...but it's primarily a rhythmic, phonetic exercise rather than a meaningful sentence.  \n\n### Translation Approach:  \nSince it's a tongue-twister, a phonetic English equivalent might be:  \n*\"She sells seashells by the seashore\"* (another classic tongue-twister).  \n\nAlternatively, a loose translation preserving the absurdity could be:  \n*\"The deer's lil' one's right here, did it\u2014ta-da!\"*  \n\nWould you like a specific tone (e.g., cute, lyrical) or context for the translation?",
           "responseTime": "10.2",
           "status": "success"
@@ -82,7 +82,7 @@
     "Grok-4",
     "Qwen3-Coder-480B-T",
     "Kimi-K2",
-    "Deepseek-V3-FW",
+    "DeepSeek-V3",
     "Mistral-Small-3",
     "Llama-4-Scout",
     "GPT-4o",

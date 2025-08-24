@@ -31,7 +31,7 @@
           "responseTime": "5.9",
           "status": "success"
         },
-        "Deepseek-V3-FW": {
+        "DeepSeek-V3": {
           "content": "# What year is it according to the Egyptian calendar?\n\n## The Egyptian calendar is based on the ancient Egyptian calendar system, which was primarily a lunar calendar. However, the modern Egyptian calendar follows the Gregorian calendar, which is widely used internationally. \n\nIf you are referring to the current year according to the Gregorian calendar, as of my last update, it is 2023. However, if you are asking about the ancient Egyptian calendar, it was based on the cycles of the Nile River and the agricultural seasons, and it didn't follow the same structure as the Gregorian calendar. The ancient Egyptian calendar did not have a linear year count like the Gregorian system. \n\nCould you clarify which Egyptian calendar you are referring to\u2014the modern Gregorian calendar used in Egypt or the ancient Egyptian calendar? If it's the ancient one, it's important to note that it didn't have a continuous year count like the Gregorian system, and the concept of \"what year is it\" wouldn't apply in the same way. \n\nIf you are asking about the Coptic calendar, which is used by the Coptic Orthodox Church, it follows the Gregorian calendar but with some differences in how the months are named and structured. \n\nFor the Gregorian calendar, which is what Egypt uses today, the current year is 2023. For the ancient Egyptian calendar, there isn't a direct equivalent to \"what year is it\" in the same sense, as it was based on the reign of kings and the cycles of the Nile. \n\nLet me know if you'd like more details on any of these!",
           "responseTime": "6.0",
           "status": "success"
@@ -82,7 +82,7 @@
     "Grok-4",
     "Qwen3-Coder",
     "Kimi-K2",
-    "Deepseek-V3-FW",
+    "DeepSeek-V3",
     "Mistral-Small-3",
     "Llama-4-Scout",
     "GPT-4o",

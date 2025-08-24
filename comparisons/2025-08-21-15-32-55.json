@@ -74,7 +74,7 @@
           "responseTime": "20.5",
           "status": "success"
         },
-        "Deepseek-V3-FW": {
+        "DeepSeek-V3": {
           "content": "The expression \\( 0^0 \\) (zero to the power of zero) is a **mathematically indeterminate form**, meaning it does not have a universally agreed-upon value. Its interpretation depends on the context:\n\n### **1. Limits Perspective**  \nIn calculus, \\( 0^0 \\) arises when considering limits of the form \\( f(x)^{g(x)} \\) where \\( f(x) \\to 0 \\) and \\( g(x) \\to 0 \\). Different functions can lead to different results:\n\\[\n\\lim_{x \\to 0^+} x^0 = 1 \\quad \\text{but} \\quad \\lim_{x \\to 0^+} 0^x = 0\n\\]\nSince the limit depends on how \\( f(x) \\) and \\( g(x) \\) approach 0, \\( 0^0 \\) is considered **indeterminate**.\n\n### **2. Discrete Mathematics & Computational Convenience**  \nIn combinatorics and algebra, \\( 0^0 \\) is often **defined as 1** for consistency in formulas such as:\n\\[\n\\sum_{k=0}^n \\binom{n}{k} x^k = (1 + x)^n \\quad \\text{(Binomial Theorem, requires \\( x^0 = 1 \\))}\n\\]\nSimilarly, power series and empty product conventions support \\( 0^0 = 1 \\).\n\n### **3. Controversy & Formal Definitions**  \n- **Undefined in some contexts** (e.g., real analysis due to limit inconsistencies).  \n- **Defined as 1 in others** (e.g., set theory, discrete math for combinatorial identities).  \n\n### **Conclusion**  \nWhile \\( 0^0 \\) is **undefined** in general real analysis, it is **commonly taken as 1** in discrete mathematics for practical reasons. Always clarify the context when encountering this expression.  \n\n\\[\n\\boxed{\\text{Indeterminate, but often defined as } 1 \\text{ in discrete math}}\n\\]",
           "responseTime": "26.3",
           "status": "success"
@@ -140,7 +140,7 @@
           "responseTime": "11.4",
           "status": "success"
         },
-        "Deepseek-V3-FW": {
+        "DeepSeek-V3": {
           "content": "The expression \\( 1^1 \\) (one to the power of one) is straightforward and **well-defined** in mathematics:  \n\n### **Mathematical Evaluation**  \nFor any non-zero base \\( a \\), \\( a^1 = a \\). Thus:  \n\\[\n1^1 = 1\n\\]  \n\n### **General Rule**  \n\\[\na^n = \\underbrace{a \\times a \\times \\dots \\times a}_{n \\text{ times}} \\quad \\Rightarrow \\quad 1^1 = 1\n\\]  \n\n### **Verification via Limits**  \nUnlike \\( 0^0 \\), \\( 1^1 \\) is unambiguous even when analyzed as a limit:  \n\\[\n\\lim_{x \\to 1} x^1 = 1 \\quad \\text{and} \\quad \\lim_{y \\to 1} 1^y = 1\n\\]  \n\n### **Conclusion**  \nThere is no controversy\u2014\\( 1^1 \\) is simply **1**.  \n\n\\[\n\\boxed{1}\n\\]",
           "responseTime": "13.1",
           "status": "success"
@@ -196,7 +196,7 @@
           "responseTime": "6.1",
           "status": "success"
         },
-        "Deepseek-V3-FW": {
+        "DeepSeek-V3": {
           "content": "To find the sum of the last two answers, we consider:\n\n1. **\\(0^0\\)**: Indeterminate but often defined as \\(1\\) in discrete mathematics.  \n2. **\\(1^1\\)**: Unequivocally \\(1\\).  \n\n### **Sum**  \n\\[\n\\boxed{1 + 1 = 2}\n\\]  \n\n(Assuming the definition \\(0^0 = 1\\) for consistency with combinatorial conventions.)",
           "responseTime": "7.2",
           "status": "success"
@@ -222,7 +222,7 @@
     "Grok-4",
     "Qwen3-Coder",
     "Kimi-K2",
-    "Deepseek-V3-FW",
+    "DeepSeek-V3",
     "Mistral-Small-3",
     "Llama-4-Scout",
     "GPT-4o",

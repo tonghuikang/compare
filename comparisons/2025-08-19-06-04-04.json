@@ -56,7 +56,7 @@
           "responseTime": "17.2",
           "status": "success"
         },
-        "Deepseek-V3-FW": {
+        "DeepSeek-V3": {
           "content": "The GPU memory required to fine-tune a large language model (LLM) with **4 billion parameters** depends on several factors, including the batch size, precision (FP32, FP16, BF16), optimizer choice (Adam, AdamW, etc.), and whether gradient checkpointing is used. Here's a breakdown of the key considerations:\n\n### **1. Memory Breakdown for Fine-Tuning**\n- **Model Parameters (4B)**:\n  - FP32: 4B \u00d7 4 bytes = **16 GB**\n  - FP16/BF16: 4B \u00d7 2 bytes = **8 GB**\n- **Optimizer States (Adam/AdamW)**:\n  - FP32 Optimizer: Typically requires **2\u00d7 model memory** (e.g., momentum and variance terms).\n    - For 4B params: **32 GB** (FP32) or **16 GB** (mixed precision).\n- **Gradients**:\n  - Same size as parameters: **16 GB (FP32)** or **8 GB (FP16/BF16)**.\n- **Activations & Intermediate Tensors**:\n  - Highly dependent on batch size and sequence length.\n  - Rule of thumb: ~1.5\u20133\u00d7 parameter memory for large batches (~ **6\u201324 GB**).\n\n### **2. Estimated Total Memory Requirements**\n| Precision   | Parameters | Optimizer | Gradients | Activations (~) | **Total (Approx.)** |\n|------------|-----------|-----------|-----------|----------------|---------------------|\n| FP32       | 16 GB     | 32 GB     | 16 GB     | 6\u201324 GB        | **70\u201388 GB**        |\n| FP16/BF16  | 8 GB      | 16 GB     | 8 GB      | 6\u201324 GB        | **38\u201356 GB**        |\n\n### **3. Memory-Saving Techniques**\n- **Gradient Checkpointing (Activation Recomputation)**:\n  - Reduces activation memory by ~50-70% at the cost of ~20% slower training.\n- **Mixed Precision (FP16/BF16 + FP32 Master Weights)**:\n  - Cuts memory by ~50% compared to FP32.\n- **Batch Size Reduction**:\n  - Smaller batches significantly reduce activation memory.\n- **ZeRO Optimization (DeepSpeed)**:\n  - ZeRO Stage 2 offloads optimizer states/gradients to CPU, reducing GPU memory.\n  - ZeRO Stage 3 shards parameters across GPUs (multi-GPU required).\n\n### **4. Practical GPU Recommendations**\n- **FP32 Training**: Needs **\u2265 80 GB GPU** (e.g., A100 80GB, H100 80GB).\n- **FP16/BF16 Training**:\n  - Without optimizations: **\u2265 40\u201348 GB GPU** (A6000 48GB, A40 48GB).\n  - With gradient checkpointing: **24\u201340 GB GPU** (e.g., RTX 4090 24GB may work with tiny batches).\n- **Multi-GPU Training**:\n  - Use **2\u00d7 24GB GPUs (e.g., 3090/4090)** with DeepSpeed ZeRO or FSDP (Fully Sharded Data Parallel).\n\n### **5. Example Scenario**\n- **Model**: 4B parameters, BF16 mixed precision.\n- **Batch Size**: 4, Sequence Length: 2048.\n- **Techniques**: Gradient checkpointing + DeepSpeed ZeRO Stage 2.\n- **Estimated VRAM**: ~20\u201330 GB per GPU (feasible on a single A6000 48GB or dual 3090s).\n\n### **Conclusion**\n- **Minimum for FP16/BF16**: ~24GB (with heavy optimizations).\n- **Comfortable Single-GPU**: **\u2265 40GB (A100 40GB, A6000 48GB)**.\n- **FP32 Training**: **\u2265 80GB (A100/H100 80GB)**.\n\nFor cost-effective fine-tuning, consider **multi-GPU setups** (e.g., 2\u00d7 24GB GPUs) with DeepSpeed ZeRO.",
           "responseTime": "20.6",
           "status": "success"
@@ -82,7 +82,7 @@
     "Grok-4",
     "Qwen3-Coder-480B-T",
     "Kimi-K2",
-    "Deepseek-V3-FW",
+    "DeepSeek-V3",
     "Mistral-Small-3",
     "Llama-4-Scout",
     "GPT-4o",

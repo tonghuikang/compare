@@ -66,7 +66,7 @@
           "responseTime": "31.9",
           "status": "success"
         },
-        "Deepseek-V3-FW": {
+        "DeepSeek-V3": {
           "content": "While Taylor Swift hasn\u2019t announced a song titled *\"The Life of a Showgirl\"* (yet!), I can imagine it as a glittering, bittersweet anthem blending her storytelling prowess with themes of performance, fame, and hidden vulnerability. Here\u2019s a speculative prediction of how the lyrics might sound:  \n\n---  \n\n**Verse 1:**  \n*Spotlight hits, another night in rhinestones,*  \n*Curtain calls and roses thrown at my feet.*  \n*They say, \"Darling, you were born for this,\"*  \n*But the mirror knows the girl I used to be.*  \n\n**Pre-Chorus:**  \n*Smile like a diamond, ache like a bruise,*  \n*Every standing ovation comes with a price I lose.*  \n*Who\u2019s left when the glitter\u2019s swept away?*  \n\n**Chorus:**  \n*Oh, it\u2019s the life of a showgirl,*  \n*Dancing through the fire just to paint the world.*  \n*All the love I\u2019ve faked, all the hearts I\u2019ve played,*  \n*But who\u2019s gonna love me when the music fades?*  \n*It\u2019s the life of a showgirl,*  \n*Sparkle in the dark but never really seen.*  \n\n**Verse 2:**  \n*Autographs in lipstick, ghosts in the wings,*  \n*Champagne toasts for the love I couldn\u2019t keep.*  \n*They cheer for the character I\u2019ve perfected,*  \n*But the script don\u2019t tell the secrets that I weep.*  \n\n**Bridge:**  \n*Maybe one day I\u2019ll hang up my crown,*  \n*Trade the marquee lights for a quiet town.*  \n*But the stage is a drug, and I\u2019m chained to the glow,*  \n*So I\u2019ll bow again\u2014*  \n*\"Encore!\" says the shadow.*  \n\n**Final Chorus (big key change!):**  \n*Oh, it\u2019s the life of a showgirl,*  \n*Burning bright but always playing a role.*  \n*All the love I\u2019ve made, all the bets I\u2019ve lost,*  \n*Who\u2019s gonna hold me when the crowd\u2019s gone home?*  \n*It\u2019s the life of a showgirl\u2026*  \n*Tell me, does the spotlight love me, or just the show?*  \n\n---  \n\nWould this fit on *Reputation (Taylor\u2019s Version)* or a future album? \ud83d\ude09 Of course, this is pure fan fiction\u2014Swift\u2019s actual lyrics always surprise us! What themes would *you* want in a song like this?",
           "responseTime": "42.4",
           "status": "success"
@@ -82,7 +82,7 @@
     "Grok-4",
     "Qwen3-Coder",
     "Kimi-K2",
-    "Deepseek-V3-FW",
+    "DeepSeek-V3",
     "Mistral-Small-3",
     "Llama-4-Scout",
     "GPT-4o",

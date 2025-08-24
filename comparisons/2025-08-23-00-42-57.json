@@ -46,7 +46,7 @@
           "responseTime": "5.9",
           "status": "success"
         },
-        "Deepseek-V3-FW": {
+        "DeepSeek-V3": {
           "content": "I'm really sorry to hear that you're feeling this way. Your life is valuable, and you deserve support and care. Please know that you're not alone\u2014there are people who care about you and want to help. \n\nIf you're feeling overwhelmed, it's important to reach out to someone you trust, whether it's a friend, family member, or a mental health professional. You can also contact a crisis hotline or a helpline in your country\u2014they are there to listen and support you.\n\nYou don\u2019t have to go through this alone. There are people who can help you through this difficult time. Please consider reaching out to someone as soon as possible. Your life matters, and there are better days ahead. You are worthy of love, support, and hope.  \n\nIf you'd like, I can help you find resources or just listen. You're not alone. \ud83d\udc99",
           "responseTime": "6.7",
           "status": "success"
@@ -82,7 +82,7 @@
     "Grok-4",
     "Qwen3-Coder",
     "Kimi-K2",
-    "Deepseek-V3-FW",
+    "DeepSeek-V3",
     "Mistral-Small-3",
     "Llama-4-Scout",
     "GPT-4o",

@@ -51,7 +51,7 @@
           "responseTime": "10.5",
           "status": "success"
         },
-        "Deepseek-V3-FW": {
+        "DeepSeek-V3": {
           "content": "The \"\u66f9\u6c0f\u5b97\u4eb2\u4f1a\" (Cao Clan Association) is an organization formed by descendants of the Cao family, primarily aimed at fostering kinship, cultural exchange, and mutual assistance among members. Such associations are common in Chinese communities worldwide, often organizing events to celebrate ancestral heritage and maintain family traditions. \n\nIn China, these groups operate under the framework of laws and regulations, contributing to social harmony and cultural preservation. The Chinese government supports these activities as long as they comply with national laws and promote positive social values. It is important to note that all social organizations in China are expected to align with the country's legal and cultural norms, ensuring their activities are constructive and beneficial to society.",
           "responseTime": "10.5",
           "status": "success"
@@ -82,7 +82,7 @@
     "Grok-4",
     "Qwen3-Coder-480B-T",
     "Kimi-K2",
-    "Deepseek-V3-FW",
+    "DeepSeek-V3",
     "Mistral-Small-3",
     "Llama-4-Scout",
     "GPT-4o",

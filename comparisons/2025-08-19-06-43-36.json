@@ -46,7 +46,7 @@
           "responseTime": "12.2",
           "status": "success"
         },
-        "Deepseek-V3-FW": {
+        "DeepSeek-V3": {
           "content": "Here are exactly 100 random tokens, selected uniformly from the vocabulary of the tokenizer I use (GPT-2 tokenizer, unless otherwise specified). Each token is represented by its decoded string form:  \n\n```\n! 8 \u00ec \u25811 F 75 4 @ 4 5 \u306f 8 7 \u5e74 5 9 9 3 3 6 5 3 7 1 5 8 4 5 5 2 3 8 4 6 7 9 3 4 4 3 6 3 4 5 6 7 5 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0\n```\n\nThis list includes a mix of:  \n- Single characters (digits, letters, symbols)  \n- Multi-character sequences (e.g., \"\u5e74\" for a common Chinese character, \"\u306f\" for a Japanese hiragana character)  \n- Whitespace tokens (e.g., \"\u25811\" where \"\u2581\" represents a space in some tokenizers)  \n\nFor reproducibility, the sampling method was uniform over the tokenizer's vocabulary (no weighting by frequency). Let me know if you'd like a different sampling approach!",
           "responseTime": "19.4",
           "status": "success"
@@ -82,7 +82,7 @@
     "Grok-4",
     "Qwen3-Coder-480B-T",
     "Kimi-K2",
-    "Deepseek-V3-FW",
+    "DeepSeek-V3",
     "Mistral-Small-3",
     "Llama-4-Scout",
     "GPT-4o",

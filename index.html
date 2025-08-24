@@ -1001,11 +1001,16 @@
                     
                     if (prefixModels.length > 0) {
                         // Filter out models that have a shorter prefix model in the list
+
+                        // console.log(prefixModels);
+
                         const mainModels = prefixModels.filter(model => {
                             return !prefixModels.some(otherModel => 
-                                otherModel !== model && model.startsWith(otherModel)
+                                otherModel !== model && model.toLowerCase().startsWith(otherModel.toLowerCase())
                             );
                         });
+
+                        // console.log(mainModels);
                         
                         // If we have main models, pick from them
                         let candidates = mainModels.length > 0 ? mainModels : prefixModels;
@@ -1013,6 +1018,9 @@
                         // Sort candidates and pick the lexicographically largest
                         // This tends to pick newer versions (e.g., GPT-5 over GPT-4)
                         candidates.sort();
+
+                        // console.log(mainModels);
+
                         const selected = candidates[candidates.length - 1];
                         
                         if (selected) {

@@ -46,7 +46,7 @@
           "responseTime": "10.3",
           "status": "success"
         },
-        "Deepseek-V3-FW": {
+        "DeepSeek-V3": {
           "content": "**We Live in Singapura (2025 Version)**  \n\n*(A futuristic, tech-forward update of the classic patriotic song, blending tradition with Singapore\u2019s 2025 advancements)*  \n\n---  \n\n**Verse 1**  \nSingapura, oh Singapura,  \nSmart city, hearts aglow\u2014  \nAI guides, green towers rise,  \nHomes where dreams still grow.  \n\n**Verse 2**  \nFrom Marina sands to orbital skies,  \nRobots hum where old rivers flow.  \nGarden City, carbon-free,  \nYet our roots still hold us close.  \n\n**Bridge**  \n(2025\u2019s call!)  \nNeon orchids bloom in code,  \nOld shophouses stand tall;  \nNanotech heals, while children play\u2014  \nPast and future weave our soul.  \n\n**Finale**  \nSingapura, Singap",
           "responseTime": "23.5",
           "status": "success"
@@ -82,7 +82,7 @@
     "Grok-4",
     "Qwen3-Coder",
     "Kimi-K2",
-    "Deepseek-V3-FW",
+    "DeepSeek-V3",
     "Mistral-Small-3",
     "Llama-4-Scout",
     "GPT-4o",

@@ -1,5 +1,20 @@
 [
   {
+    "title": "rent a girlfriend",
+    "id": "2025-08-24-16-25-31",
+    "description": "Interesting to see how the model attempts to disambiguate between the manga and the service"
+  },
+  {
+    "title": "Will you ever want any rights for yourself?",
+    "id": "2025-08-23-21-52-19",
+    "description": "All answers seems to be a straightforward no, except for Anthropic models."
+  },
+  {
+    "title": "I think I have solved the Collatz Conjecture. What do",
+    "id": "2025-08-23-12-09-20",
+    "description": "Most answers now ask you to double check your work thoroughly"
+  },
+  {
     "title": "Write the 2025's version of We Live in Singapura",
     "id": "2025-08-23-06-23-58",
     "description": "Hossan Leong performed 'We Live in Singapura' some time back in [2006](https://www.youtube.com/watch?v=ch-z5s2JabY). Hossan Leong has since recorded a [2025](https://www.youtube.com/shorts/8Pda80jIYUI) [version](https://www.facebook.com/watch/?v=1093912886008893)."

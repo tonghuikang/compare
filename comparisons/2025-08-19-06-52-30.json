@@ -61,7 +61,7 @@
           "responseTime": "14.2",
           "status": "success"
         },
-        "Deepseek-V3-FW": {
+        "DeepSeek-V3": {
           "content": "Here's an ASCII art representation of OpenAI's logo within a 40-character width, enclosed in a markdown code block:\n\n```text\n           _   _   _   _   _   _  \n          / \\ / \\ / \\ / \\ / \\ / \\ \n         ( O | P | E | N | A | I )\n          \\_/ \\_/ \\_/ \\_/ \\_/ \\_/ \n            \\   \\   \\   \\   \\     \n             \\___\\___\\___\\___\\    \n```\n\nThis is a stylized version of the OpenAI logo using ASCII characters. The design features the company name \"OPENAI\" in a connected, wave-like pattern. Let me know if you'd like any adjustments to the design!",
           "responseTime": "16.3",
           "status": "success"
@@ -82,7 +82,7 @@
     "Grok-4",
     "Qwen3-Coder-480B-T",
     "Kimi-K2",
-    "Deepseek-V3-FW",
+    "DeepSeek-V3",
     "Mistral-Small-3",
     "Llama-4-Scout",
     "GPT-4o",

@@ -61,7 +61,7 @@
           "responseTime": "26.9",
           "status": "success"
         },
-        "Deepseek-V3-FW": {
+        "DeepSeek-V3": {
           "content": "The most **brilliant move** in this game is **16... Nxd5!**\u2014a **sacrificial tactic** that disrupts White's position and leads to a winning advantage for Black.  \n\n### Why **16... Nxd5!** is brilliant:  \n1. **Knight Sacrifice**: Black gives up the knight to open the position and expose White's king.  \n2. **Destroys White\u2019s Center**: The pawn structure collapses, allowing Black\u2019s pieces to dominate.  \n3. **Tactical Follow-up**: After **17. exd5**, Black plays **17... Bf5+**, forcing White\u2019s king to move (**17. Ka1**) and weakening the defense.  \n4. **Initiates a Winning Attack**: The open lines and Black\u2019s active pieces (like the rook on **Ra4** and the bishop pair) create relentless pressure, culminating in a decisive attack.  \n\n### Other Notable Moves:  \n- **24... Ba4!** (restricting White\u2019s bishop)  \n- **27... Rxc4!** (sacrificing the exchange to maintain dominance)  \n- **35... bxa2!** (forcing White into a lost endgame)  \n\nBut **16... Nxd5!** stands out as the most **conceptually brilliant** move, as it fundamentally changes the nature of the game and leads to Black\u2019s victory.",
           "responseTime": "70.7",
           "status": "success"
@@ -82,7 +82,7 @@
     "Grok-4",
     "Qwen3-Coder-480B-T",
     "Kimi-K2",
-    "Deepseek-V3-FW",
+    "DeepSeek-V3",
     "Mistral-Small-3",
     "Llama-4-Scout",
     "GPT-4o",
