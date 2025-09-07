@@ -19,7 +19,10 @@ Navigation
 - Archive view will display the conversation in full
     - Archive view will share the same elements with chat view
         - Instead of the ask bar, the description (from comparison_registry.json) will be displayed instead
-        - The ask button will lead to the Chat view
+        - The "Start New Chat →" button will show a modal asking for API key
+            - The modal will indicate if the conversation will be imported
+            - After entering API key, it navigates to chat view with imported messages
+                - The imported message should include both user and assistant messages
 
 
 

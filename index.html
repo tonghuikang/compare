@@ -869,7 +869,7 @@
                         `).join('')}
                     </div>
                     
-                    <button onclick="window.location.href='?api_key='" style="
+                    <button onclick="startNewChat()" style="
                         position: fixed;
                         bottom: 20px;
                         right: 20px;
@@ -957,9 +957,42 @@
         async function showChatView() {
             const mainContent = document.getElementById('mainContent');
             
-            // Reset messages for new chat
-            messages = [];
-            requestResponses = {};
+            // Check if there are imported data (messages and responses)
+            const importedDataParam = urlParams.get('imported_data');
+            const importedMessagesParam = urlParams.get('imported_messages'); // Keep backward compatibility
+            
+            if (importedDataParam) {
+                try {
+                    // Parse and import both messages and responses
+                    const importedData = JSON.parse(decodeURIComponent(importedDataParam));
+                    messages = importedData.messages || [];
+                    requestResponses = importedData.requestResponses || {};
+                    // Remove the imported_data parameter from URL to avoid re-importing on refresh
+                    const newUrl = new URL(window.location);
+                    newUrl.searchParams.delete('imported_data');
+                    window.history.replaceState({}, document.title, newUrl.toString());
+                } catch (e) {
+                    console.error('Failed to import data:', e);
+                    messages = [];
+                    requestResponses = {};
+                }
+            } else if (importedMessagesParam) {
+                // Backward compatibility with old imported_messages parameter
+                try {
+                    messages = JSON.parse(decodeURIComponent(importedMessagesParam));
+                    const newUrl = new URL(window.location);
+                    newUrl.searchParams.delete('imported_messages');
+                    window.history.replaceState({}, document.title, newUrl.toString());
+                } catch (e) {
+                    console.error('Failed to import messages:', e);
+                    messages = [];
+                }
+                requestResponses = {};
+            } else {
+                // Reset for new chat
+                messages = [];
+                requestResponses = {};
+            }
             
             // Get models from URL parameter or fetch from API
             const modelsParam = urlParams.get('models');
@@ -1063,6 +1096,76 @@
                 ${saveButtonHtml}
             `;
 
+            // If there are imported messages and responses, display them in the chat history
+            if (messages.length > 0 || Object.keys(requestResponses).length > 0) {
+                const chatHistory = document.getElementById('chatHistory');
+                
+                // Sort request IDs by timestamp
+                const sortedRequestIds = Object.keys(requestResponses).sort((a, b) => parseFloat(a) - parseFloat(b));
+                
+                // Track which message index we're at
+                let messageIndex = 0;
+                
+                // For each request, add the corresponding user message and then the system message
+                sortedRequestIds.forEach(requestId => {
+                    const req = requestResponses[requestId];
+                    
+                    // Add the user message that corresponds to this request
+                    if (messageIndex < messages.length) {
+                        const msg = messages[messageIndex];
+                        if (msg.role === 'user') {
+                            const msgDiv = document.createElement('div');
+                            msgDiv.className = `message ${msg.role}`;
+                            // Escape HTML first, then convert newlines to <br> tags
+                            const escapedMessage = msg.content
+                                .replace(/&/g, '&amp;')
+                                .replace(/</g, '&lt;')
+                                .replace(/>/g, '&gt;')
+                                .replace(/"/g, '&quot;')
+                                .replace(/'/g, '&#039;');
+                            msgDiv.innerHTML = escapedMessage.replace(/\n/g, '<br>');
+                            chatHistory.appendChild(msgDiv);
+                            messageIndex++;
+                        }
+                    }
+                    
+                    // Add the system message for this request
+                    const systemMsg = document.createElement('div');
+                    systemMsg.className = 'message system clickable';
+                    const successCount = Object.values(req.responses).filter(r => r.status === 'success').length;
+                    const totalCount = Object.keys(req.responses).length;
+                    systemMsg.textContent = `${successCount}/${totalCount} responded`;
+                    systemMsg.dataset.requestId = requestId;
+                    systemMsg.onclick = () => restoreResponses(requestId);
+                    systemMsg.title = 'Click to view responses';
+                    chatHistory.appendChild(systemMsg);
+                });
+                
+                // Add any remaining messages that don't have responses yet
+                while (messageIndex < messages.length) {
+                    const msg = messages[messageIndex];
+                    const msgDiv = document.createElement('div');
+                    msgDiv.className = `message ${msg.role}`;
+                    const escapedMessage = msg.content
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;')
+                        .replace(/"/g, '&quot;')
+                        .replace(/'/g, '&#039;');
+                    msgDiv.innerHTML = escapedMessage.replace(/\n/g, '<br>');
+                    chatHistory.appendChild(msgDiv);
+                    messageIndex++;
+                }
+                
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+                
+                // Show the most recent responses by default
+                const mostRecentId = sortedRequestIds[sortedRequestIds.length - 1];
+                if (mostRecentId) {
+                    restoreResponses(mostRecentId);
+                }
+            }
+            
             // Set up event listeners
             document.getElementById('chatForm').addEventListener('submit', handleSubmit);
             
@@ -1722,6 +1825,113 @@
                     saveButton.textContent = 'Save Comparison';
                     saveButton.disabled = false;
                 }, 2000);
+            }
+        }
+        
+        // Function to show API key modal
+        function showApiKeyModal(isImporting = false) {
+            return new Promise((resolve) => {
+                // Create modal overlay
+                const modalOverlay = document.createElement('div');
+                modalOverlay.className = 'modal-overlay';
+                
+                // Create modal content
+                const modal = document.createElement('div');
+                modal.className = 'modal';
+                
+                const title = isImporting ? 'Import Conversation' : 'Start New Chat';
+                const description = isImporting 
+                    ? 'Enter your Poe API key to start a new chat with this conversation imported:'
+                    : 'Enter your Poe API key to start a new chat:';
+                
+                modal.innerHTML = `
+                    <h2>${title}</h2>
+                    <p style="color: #666; margin-bottom: 15px;">${description}</p>
+                    <input type="text" 
+                        id="apiKeyModalInput" 
+                        class="modal-input" 
+                        placeholder="Your Poe API key"
+                        style="min-height: 50px; resize: none;"
+                        autofocus
+                    >
+                    <p style="margin-top: 10px; margin-bottom: 15px; color: #666; font-size: 13px;">
+                        Get your API key from <a href="https://poe.com/api_key" target="_blank" style="color: #4a90e2;">poe.com/api_key</a>
+                    </p>
+                    <div class="modal-buttons">
+                        <button class="modal-button secondary" id="cancelApiKeyButton">Cancel</button>
+                        <button class="modal-button primary" id="confirmApiKeyButton">Start Chat</button>
+                    </div>
+                `;
+                
+                modalOverlay.appendChild(modal);
+                document.body.appendChild(modalOverlay);
+                
+                // Focus the input
+                const apiKeyInput = document.getElementById('apiKeyModalInput');
+                apiKeyInput.focus();
+                
+                // Handle button clicks
+                const handleConfirm = () => {
+                    const apiKey = apiKeyInput.value.trim();
+                    cleanup();
+                    resolve(apiKey);
+                };
+                
+                const handleCancel = () => {
+                    cleanup();
+                    resolve(null);
+                };
+                
+                const cleanup = () => {
+                    document.body.removeChild(modalOverlay);
+                };
+                
+                document.getElementById('confirmApiKeyButton').addEventListener('click', handleConfirm);
+                document.getElementById('cancelApiKeyButton').addEventListener('click', handleCancel);
+                
+                // Handle Enter key
+                apiKeyInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        handleConfirm();
+                    }
+                });
+                
+                // Handle Escape key
+                modalOverlay.addEventListener('click', (e) => {
+                    if (e.target === modalOverlay) {
+                        handleCancel();
+                    }
+                });
+                
+                document.addEventListener('keydown', function escapeHandler(e) {
+                    if (e.key === 'Escape') {
+                        handleCancel();
+                        document.removeEventListener('keydown', escapeHandler);
+                    }
+                });
+            });
+        }
+        
+        // Function to start a new chat
+        async function startNewChat() {
+            // Check if we're in archive view (have a conversation_id)
+            const conversationId = urlParams.get('conversation_id');
+            
+            const isImporting = !!conversationId;
+            const apiKey = await showApiKeyModal(isImporting);
+            
+            if (apiKey) {
+                if (conversationId) {
+                    // Import both messages and responses
+                    const dataToImport = {
+                        messages: messages,
+                        requestResponses: requestResponses
+                    };
+                    const encodedData = encodeURIComponent(JSON.stringify(dataToImport));
+                    window.location.href = `?api_key=${encodeURIComponent(apiKey)}&imported_data=${encodedData}`;
+                } else {
+                    window.location.href = `?api_key=${encodeURIComponent(apiKey)}`;
+                }
             }
         }
         
