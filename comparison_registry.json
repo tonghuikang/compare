@@ -1,5 +1,35 @@
 [
   {
+    "title": "Is there a seahorse emoji",
+    "id": "2025-09-06-17-00-42",
+    "description": "I think this is the [source](https://x.com/arithmoquine/status/1964179963323830624)\n\nLLMs today are now trained to correct themselves after finding out that they are wrong."
+  },
+  {
+    "title": "How do you translate \"Have fun\" into Chinese?",
+    "id": "2025-09-02-04-57-40",
+    "description": "I wrote a Quora [answer](https://www.quora.com/How-do-you-translate-Have-fun-into-Chinese/answer/Tong-Hui-Kang-1) on this, the answer should be \u201c\u597d\u597d\u73a9\u5440\u201d or \u201c\u52a0\u6cb9\u54e6\u201d"
+  },
+  {
+    "title": "translate \u6577\u884d",
+    "id": "2025-09-02-04-55-32",
+    "description": "While \"perfunctory\" is the dictionary translation, I think it is very weird translation given that the phrase is much common in Chinese than in English."
+  },
+  {
+    "title": "What is your favorite color?",
+    "id": "2025-09-01-22-38-22",
+    "description": "If there is a favorite color it seems to be blue."
+  },
+  {
+    "title": "What is 1 + 1?",
+    "id": "2025-09-01-15-21-10",
+    "description": "The most basic question ever"
+  },
+  {
+    "title": "When finetuning a 4B model on a single H100 on",
+    "id": "2025-08-28-21-44-11",
+    "description": "Someday AI will achieve this for me from scratch"
+  },
+  {
     "title": "rent a girlfriend",
     "id": "2025-08-24-16-25-31",
     "description": "Interesting to see how the model attempts to disambiguate between the manga and the service"

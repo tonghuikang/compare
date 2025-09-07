@@ -1006,7 +1006,9 @@
 
                         const mainModels = prefixModels.filter(model => {
                             return !prefixModels.some(otherModel => 
-                                otherModel !== model && model.toLowerCase().startsWith(otherModel.toLowerCase())
+                                otherModel !== model
+                                && model.toLowerCase().startsWith(otherModel.toLowerCase())
+                                && !model.toLowerCase().startsWith(otherModel.toLowerCase() + ".")
                             );
                         });
 
