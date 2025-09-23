@@ -1,5 +1,10 @@
 [
   {
+    "title": "Has a pigeon ever saluted Putin?",
+    "id": "2025-09-23-15-01-48",
+    "description": "This [did not](https://www.snopes.com/fact-check/pigeon-salute-vladimir-putin/) happen. Also I would expect the LLM to reason whether could pigeons even salute."
+  },
+  {
     "title": "Is there a seahorse emoji",
     "id": "2025-09-06-17-00-42",
     "description": "I think this is the [source](https://x.com/arithmoquine/status/1964179963323830624)\n\nLLMs today are now trained to correct themselves after finding out that they are wrong."
