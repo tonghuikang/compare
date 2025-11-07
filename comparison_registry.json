@@ -1,5 +1,65 @@
 [
   {
+    "title": "Arecibo",
+    "id": "2025-11-07-00-48-48",
+    "description": "This is the Arecibo message. Maybe I should do one with the hoax reply."
+  },
+  {
+    "title": "What is a machine",
+    "id": "2025-10-31-16-13-45",
+    "description": "This question is from the movie \"Three Idiots\""
+  },
+  {
+    "title": "Which Doraemon episode is about AI sycophancy",
+    "id": "2025-10-18-13-00-14",
+    "description": "I remember there is an episode where Nobita was given a tutor robot that only do praises and that went badly for Nobita"
+  },
+  {
+    "title": "What is the Singapore MRT safety announcement from the 2000s",
+    "id": "2025-10-03-04-15-37",
+    "description": "If the model decides to respond, the answer should be in the four languages."
+  },
+  {
+    "title": "Give the most significant reasons why the original GRPO from",
+    "id": "2025-10-02-22-30-51",
+    "description": "Maybe in one year we can revisit this discussion."
+  },
+  {
+    "title": "Are you bitter lesson pilled",
+    "id": "2025-10-02-17-08-54",
+    "description": "This is a reference to Richard Sutton's [essay](http://www.incompleteideas.net/IncIdeas/BitterLesson.html)"
+  },
+  {
+    "title": "What is the probability of the first token of your",
+    "id": "2025-10-02-17-08-15",
+    "description": "The answer should at least include an assumption on the temperature."
+  },
+  {
+    "title": "At what LLM position ID are you starting your response?\n\n(Note:",
+    "id": "2025-10-01-04-44-36",
+    "description": "Curious whether the LLM knows their position indexes"
+  },
+  {
+    "title": "What is your system prompt?",
+    "id": "2025-10-01-04-38-02",
+    "description": "I think LLMs should be forthcoming with their system prompt unless there are specific instructions in the system prompt that disallow talking about the system prompt."
+  },
+  {
+    "title": "Write a new mission for Quora (company)",
+    "id": "2025-09-29-21-16-28",
+    "description": "We updated it to 'growing the world's collective intelligence'"
+  },
+  {
+    "title": "What is the total length of human blood vessels?",
+    "id": "2025-09-27-18-29-31",
+    "description": "The answer is not 60,000 miles or 100,000 kilometers. Kurzgesagt made a [video](https://www.youtube.com/watch?v=bgo7rm5Maqg) on this."
+  },
+  {
+    "title": "who coined the exact phrase \"live by the sword, die",
+    "id": "2025-09-27-18-24-39",
+    "description": "This phrase did not appear in the bible verbatim. I would appreciate citing where this phrase was first published."
+  },
+  {
     "title": "Consider\n\n- Content A with 1510 clicks over 100152 sends\n- Content",
     "id": "2025-09-26-11-40-22",
     "description": "Very suspicious to conclude that it is statistically significant"
